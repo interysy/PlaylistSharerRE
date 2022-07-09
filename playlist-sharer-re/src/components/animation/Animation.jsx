@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react' 
+import './animation.css'
 
 const Animation = () => {
   return (
-    <div>Animation</div>
+    <section id="animation">Animation</section>
   )
 }
 

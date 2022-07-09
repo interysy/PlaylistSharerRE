@@ -1,0 +1,23 @@
+.btns {
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+}
+
+.btns>Button {
+    padding: 2rem;
+    background: red;
+}
+
+#options {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+#options small {
+    font-size: 1.5rem;
+    font-weight: 300;
+}

@@ -3,9 +3,10 @@ import "./header.css"
 
 const Header = () => {
   return ( 
-    <section id = "header" >  
-        <h1>PlaylistSharerRe</h1> 
-    </section>
+    <header id = "header"> 
+      <h1>PlaylistSharerRE</h1>  
+      <small>Share , combine and synchronise your playlists!</small>
+    </header>
   )
 }
 
