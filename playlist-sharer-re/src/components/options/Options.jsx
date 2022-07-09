@@ -11,9 +11,9 @@ const Options = () => {
     <section id="options">   
         <small> So what would you like to do ? </small> 
         <div className="btns">
-          <Button color  = "#305973" text = "Share" onClick = {test} /> 
-          <Button color  = "#305973" text = "Combine" onClick = {test}/> 
-          <Button color  = "#305973" text = "Synchronise" onClick = {test}/> 
+          <Button color  = "#305973" text = "Share" onClick = {test} className = "btn"/> 
+          <Button color  = "#305973" text = "Combine" onClick = {test} className = "btn"/> 
+          <Button color  = "#305973" text = "Synchronise" onClick = {test} className = "btn"/> 
         </div>
     </section>
   )
