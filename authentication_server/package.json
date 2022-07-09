@@ -1,0 +1,19 @@
+{
+    "name": "authentication_server",
+    "version": "1.0.0",
+    "description": "Authentication Server For APIs involved in the PlaylistSharerRE app",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node authentication_server.js"
+    },
+    "author": "interysy",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "googleapis": "^105.0.0",
+        "request": "^2.88.2"
+    }
+}
