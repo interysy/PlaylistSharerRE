@@ -9,10 +9,10 @@ const default_state = {
 
 const spotify_reducer = (state = default_state, action) => {
     switch (action.type) {
-        case 'LOG-IN':
-            return state;
+        case 'LOG_IN':
+            return {...state, token: action.payload.token, logged_in: action.payload.logged_in }
         case 'LOG-OUT':
-            return state;
+            return default_state;
         default:
             return state;
 

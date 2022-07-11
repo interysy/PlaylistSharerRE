@@ -10,15 +10,6 @@ import ContactMe from '../components/contactme/ContactMe'
 import Privacy from '../components/privacy/Privacy' 
 import Footer from '../components/footer/Footer'
  
-let mapStateToProps = (state) => {
-    return {
-      spotify : state.spotify_reducer.logged_in, 
-      youtube : state.youtube_reducer.logged_in,
-    };
-  };  
-   
-
-
 
 class Home extends React.Component {
     constructor() {
@@ -26,11 +17,10 @@ class Home extends React.Component {
     }
 
     render() {
-        return (
+        return ( 
             <div>   
-                <p>{this.props.spotify}</p> 
                 <Nav/>
-                <Header/>  
+                <Header colorSpotify = {(this.props.loggedInSpotify) ? 'green' : 'red'} colorYoutube = {(this.props.loggedInYoutube) ? 'green' : 'red'}/>  
                 <Animation/>  
                 <Options/>
                 <Description/>  
@@ -40,6 +30,16 @@ class Home extends React.Component {
             </div>
         );
     }
-}
+} 
+  
+const mapStateToProps = (state) => {  
+    return { 
+        loggedInSpotify : state.spotify_reducer.logged_in, 
+        loggedInYoutube : state.youtube_reducer.logged_in 
+
+    }
+
+} 
+ 
 
 export default connect(mapStateToProps , null)(Home);

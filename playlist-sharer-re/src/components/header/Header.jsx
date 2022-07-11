@@ -1,8 +1,7 @@
 import React from 'react' 
 import "./header.css"
 import Button from '../buttons/Button' 
-import {GoPrimitiveDot} from 'react-icons/go' 
-import {useSelector , useDispatch } from 'react-redux';  
+import {GoPrimitiveDot} from 'react-icons/go'  
 
 
  
@@ -14,25 +13,24 @@ let showYoutubeForm = () => {
   window.location.replace('http://localhost:3001/logingoogle');
 }
  
- 
-// const logged_into_spotify = useSelector(state => state.spotify_reducer); 
-// const logged_into_youtube = useSelector(state => state.youtube_reducer);  
-// const dispatch = useDispatch(); 
-// console.log(logged_into_spotify); 
-// console.log(logged_into_youtube); 
 
-const Header = () => {
+
+const Header = ( {colorSpotify ,  colorYoutube} ) => { 
   return ( 
     <header id = "header">   
       <div id = "logged_in">    
         <div class = "service">
-          <span>Spotify: </span>  
-          <GoPrimitiveDot className = "dot"/>
+          <span>Spotify: </span>    
+          <div className="contains_dot">
+            <span className = "dot" style = {{ backgroundColor : colorSpotify}}></span> 
+          </div>
           <Button text = "Log in" onClick={showSpotifyForm}/>
         </div> 
         <div class = "service">
-          <span>Youtube: </span> 
-          <GoPrimitiveDot className = "dot"/>
+          <span>Youtube: </span>  
+          <div className="contains_dot">
+            <span className = "dot" style = {{ backgroundColor : colorYoutube}}></span> 
+          </div>
           <Button text = "Log in" onClick={showYoutubeForm}/>
         </div>
       </div> 

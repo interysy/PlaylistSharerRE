@@ -38,3 +38,15 @@
     font-size: 2rem;
     font-weight: 300;
 }
+
+.contains_dot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+}

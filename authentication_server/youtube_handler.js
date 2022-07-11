@@ -1,7 +1,5 @@
 const { google } = require('googleapis');
 
-const { getAuthorisationPageLink } = require("./spotify_handler");
-
 const result = require("dotenv").config({ path: "secrets.env" });
 
 
@@ -25,12 +23,11 @@ function getOAuth2Client() {
 async function getAndSetToken(code) {
     let { tokens } = await oauth2client.getToken(code);
     oauth2client.setCredentials(tokens);
-    console.log(tokens);
 
     if (tokens.access_token) {
-        return true;
+        return [true, access_token];
     } else {
-        return false;
+        return [false, null];
     }
 }
 
