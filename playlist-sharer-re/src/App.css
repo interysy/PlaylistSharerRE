@@ -10,12 +10,12 @@
 }
 
 :root {
-    /* --color-bg: #F9F9F9;
-    --color-bg-variant: #DED5C4;
-    --color-primary: #305973;
-    --color-primary-variant: 305973;
+    --color-btns: #FF3B3F;
+    --color-bg: #EFEFEF;
+    --color-bg-variant: #A9A9A9;
+    --color-primary: #CAEBF2;
     --color-white: #fff;
-    --color-light: rgba(255, 255, 255, 0.6); */
+    --color-black: #000000;
     --container-width-lg: 75%;
     --container-width-md: 86%;
     --container-width-sm: 90%;
@@ -32,4 +32,5 @@ html {
 
 body {
     font-family: 'Roboto', sans-serif;
+    background-color: var(--color-bg);
 }

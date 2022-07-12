@@ -5,21 +5,29 @@ import { loginSpotify } from '../redux/actions/spotify_actions'
 import { loginYoutube } from '../redux/actions/youtube_actions' 
 import { Link } from 'react-router-dom' 
 import './gettoken.css' 
-import Footer from '../components/footer/Footer'
+import Footer from '../components/footer/Footer' 
+import Button from '../components/buttons/Button'
 
 
 class GetToken extends React.Component {
     constructor() {
-        super();
+        super();    
+        
     } 
      
     componentDidMount() {    
         let received = new URLSearchParams(window.location.search); 
         let success = received.get('success'); 
-        let type = received.get('type'); 
+        let type = received.get('type');  
+        console.log(type);
         if (success) {  
-            let token = received.get('access_token'); 
-            (type  === 'spotify') ? this.props.loginSpotify(token,true) : this.props.loginYoutube(token , true);
+            let token = received.get('access_token');  
+            if (type === 'spotify') {  
+                console.log("Handling spo");
+                this.props.loginSpotify(token,true);
+            } else if (type === 'youtube') {  
+                this.props.loginYoutube(token, true);
+            }
         }
         
     } 
@@ -29,7 +37,7 @@ class GetToken extends React.Component {
         return (
             <div id="get_token">   
                 <h1>PlaylistSharerRe</h1>
-                <Link to = "/"> Click Me To Return</Link>  
+                <Link to = "/"> <Button text = "Click Here To Return"/></Link>  
                 <Footer/>
             </div>
         );

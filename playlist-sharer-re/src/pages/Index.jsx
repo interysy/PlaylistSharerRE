@@ -1,8 +1,10 @@
 import React from 'react'; 
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';  
+import './index.css'
 
 import Nav from '../components/nav/Nav' 
-import Header from '../components/header/Header' 
+import Header from '../components/header/Header'  
+import Login from '../components/login/Login'
 import Animation from '../components/animation/Animation' 
 import Options from '../components/options/Options' 
 import Description from '../components/description/Description' 
@@ -11,18 +13,31 @@ import Privacy from '../components/privacy/Privacy'
 import Footer from '../components/footer/Footer'
  
 
-class Home extends React.Component {
+class Index extends React.Component {
     constructor() {
-        super();
+        super();   
     }
-
+ 
+    
+      
     render() {
         return ( 
             <div>   
-                <Nav/>
-                <Header colorSpotify = {(this.props.loggedInSpotify) ? 'green' : 'red'} colorYoutube = {(this.props.loggedInYoutube) ? 'green' : 'red'}/>  
-                <Animation/>  
-                <Options/>
+                <Nav/> 
+                 
+                <div class = "front">
+                <Header />  
+                {/* <Animation/>   */} 
+                <Login /> 
+                 
+                { 
+                 
+                 (this.props.loggedInSpotify && this.props.loggedInYoutube) ? <Options/>: '' 
+                  
+                } 
+                 
+                </div>
+                
                 <Description/>  
                 <ContactMe/>
                 <Privacy/> 
@@ -42,4 +57,4 @@ const mapStateToProps = (state) => {
 } 
  
 
-export default connect(mapStateToProps , null)(Home);
+export default connect(mapStateToProps , null)(Index);

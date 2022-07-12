@@ -8,7 +8,7 @@ if (result.error) {
 }
 
 const BASELINK = "https://www.googleapis.com/youtube/v3";
-const REDIRECT_URI = "http://localhost:3000/authenticateyoutube";
+const REDIRECT_URI = "http://localhost:3001/authenticateyoutube";
 
 const oauth2client = new google.auth.OAuth2(
     getClientId(),
@@ -21,14 +21,11 @@ function getOAuth2Client() {
 }
 
 async function getAndSetToken(code) {
+    console.log("HERE");
     let { tokens } = await oauth2client.getToken(code);
+    console.log(tokens);
     oauth2client.setCredentials(tokens);
-
-    if (tokens.access_token) {
-        return [true, access_token];
-    } else {
-        return [false, null];
-    }
+    return oauth2client.credentials.access_token;
 }
 
 function getYoutubeAuthenticationLink() {
@@ -55,6 +52,5 @@ function getClientId() {
 
 module.exports = {
     getYoutubeAuthenticationLink,
-    getOAuth2Client,
     getAndSetToken
 }

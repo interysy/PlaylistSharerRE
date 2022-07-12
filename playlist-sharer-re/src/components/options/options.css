@@ -7,11 +7,6 @@
     margin: 2rem;
 }
 
-.btns>Button {
-    padding: 2rem;
-    background: red;
-}
-
 #options {
     text-align: center;
     margin: 2rem 0;

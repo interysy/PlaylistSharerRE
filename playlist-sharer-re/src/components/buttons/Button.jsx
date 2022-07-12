@@ -1,18 +1,14 @@
 import React from 'react' 
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types' 
+import './button.css'
 
 const Button = ({text , color , onClick}) => { 
   return (
-    <a className = "btn" onClick = {onClick} style = {{ color : {color}}}> 
+    <a className = "btn" onClick = {onClick} style = {{ background : color}}> 
         {text} 
     </a>
   )
 } 
-  
-Button.defaultProps = { 
-    color : "red" 
-}
-
   
 Button.propTypes = {
     text: PropTypes.string.isRequired,

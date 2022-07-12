@@ -52,18 +52,22 @@ app.get('/authenticatespotify', function(req, res) {
 
 })
 
-app.get('/authenticateyoutube', function(req, res) {
+app.get('/authenticateyoutube', async function(req, res) {
+    console.log("AUTH");
     let q = url.parse(req.url, true).query || null;
 
     if (q != null) {
         let code = q.code;
-        [success, access_token] = getAndSetToken(code);
+        let access_token = await getAndSetToken(code);
+        console.log(access_token)
 
-        if (success) {
+        if (access_token != '') {
             res.redirect(REDIRECT_TO_REACT + "?success=" + true + '&type=youtube' + '&access_token=' + access_token);
         } else {
             res.redirect(REDIRECT_TO_REACT + "?success=" + false + '&type=youtube');
         }
+
+
     }
 
 
