@@ -13,6 +13,8 @@ const spotify_reducer = (state = default_state, action) => {
             return {...state, token: action.payload.token, logged_in: action.payload.logged_in }
         case 'LOG_OUT_SPOTIFY':
             return default_state;
+        case 'GET_PLAYLISTS_SPOTIFY':
+            return {...state, playlists_to_transfer: action.payload.playlists_to_transfer }
         default:
             return state;
 

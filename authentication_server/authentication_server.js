@@ -29,9 +29,10 @@ app.get('/logingoogle', function(req, res) {
 
 
 app.get('/authenticatespotify', function(req, res) {
-
+    console.log("LOL");
     let code = req.query.code || null;
     let state = req.query.state || null;
+    console.log(req.query);
 
     if (state === current_state) {
         let authentication_data = getTokenAuthenticationData(code);
@@ -39,6 +40,7 @@ app.get('/authenticatespotify', function(req, res) {
 
         request.post(authentication_data, function(error, response, body) {
             var access_token = body.access_token
+            console.log(body);
             if (access_token) {
                 res.redirect(REDIRECT_TO_REACT + '?success=' + true + "&type=spotify" + '&access_token=' + access_token);
             } else {
