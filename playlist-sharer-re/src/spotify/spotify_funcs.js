@@ -42,23 +42,3 @@ export function getData(url, data, resolve, reject, token) {
             reject(error)
         })
 }
-
-export function getData2(url, data, resolve, reject, token) {
-    fetch(url, {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        .then((response) => {
-            console.log(response);
-            let retrievedData = data.concat(response.items);
-            if (response.next !== null) {
-                getData(response.next, retrievedData, resolve, reject, token)
-            } else {
-                resolve(retrievedData)
-            }
-        }).catch(error => {
-            console.log(error)
-            reject(error)
-        })
-}
