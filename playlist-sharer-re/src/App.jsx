@@ -2,9 +2,9 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom' 
 import './App.css'; 
 import Index from './pages/index/Index'  
-import GetToken from './pages/GetToken' 
-import TransferPlaylists from './pages/TransferPlaylists' 
-import Results from './pages/Results' 
+import GetToken from './pages/gettoken/GetToken' 
+import TransferPlaylists from './pages/transferplaylists/TransferPlaylists' 
+import Results from './pages/results/Results' 
 import Error from './pages/error/Error'
  
  

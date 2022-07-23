@@ -1,11 +1,11 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux';
-import { getPlaylistsSpotify , storePlaylistsToTransferSpotify } from '../redux/actions/spotify_actions'; 
-import Playlist from '../components/playlist/Playlist'
-import { getPlaylistsYoutube , storePlaylistsToTransferYoutube } from '../redux/actions/youtube_actions'; 
+import { getPlaylistsSpotify , storePlaylistsToTransferSpotify } from '../../redux/actions/spotify_actions'; 
+import Playlist from '../../components/playlist/Playlist'
+import { getPlaylistsYoutube , storePlaylistsToTransferYoutube } from '../../redux/actions/youtube_actions'; 
 import './transfer_playlists.css' 
-import Button from '../components/buttons/Button' 
+import Button from '../../components/buttons/Button' 
 import { Link } from 'react-router-dom'
 
   

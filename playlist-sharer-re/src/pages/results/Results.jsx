@@ -1,8 +1,8 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux'; 
-import { getTracksFromPlaylist } from '../spotify/spotify_funcs' 
-import { createPlaylist , searchForTrack , insertIntoPlaylist , getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
+import { getTracksFromPlaylist } from '../../spotify/spotify_funcs' 
+import { createPlaylist , searchForTrack , insertIntoPlaylist , getTracksFromPlaylistYoutube } from '../../youtube/youtube_funcs'
 
 class Results extends React.Component {
     constructor(props) {

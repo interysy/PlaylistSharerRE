@@ -1,12 +1,12 @@
 import React from 'react'; 
 import { connect } from 'react-redux';  
 import { bindActionCreators } from 'redux';
-import { loginSpotify } from '../redux/actions/spotify_actions' 
-import { loginYoutube } from '../redux/actions/youtube_actions' 
+import { loginSpotify } from '../../redux/actions/spotify_actions' 
+import { loginYoutube } from '../../redux/actions/youtube_actions' 
 import { Link } from 'react-router-dom' 
 import './gettoken.css' 
-import Footer from '../components/footer/Footer' 
-import Button from '../components/buttons/Button'
+import Footer from '../../components/footer/Footer' 
+import Button from '../../components/buttons/Button'
 
 
 class GetToken extends React.Component {
