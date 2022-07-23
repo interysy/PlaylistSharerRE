@@ -1,0 +1,35 @@
+#transfer_playlists {
+    text-align: center;
+}
+
+#playlists {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.service {
+    height: 80vh;
+    overflow: auto;
+    min-width: fit-content;
+    padding: 1rem 2rem 2rem 2rem;
+    border: 5px solid blue;
+    border-radius: 1.5rem;
+    margin: 2rem;
+}
+
+.service h3 {
+    padding-bottom: 0.5rem;
+}
+
+.return_btn {
+    display: absolute;
+    left: 0;
+    top: 0;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 3rem;
+}

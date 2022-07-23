@@ -1,0 +1,18 @@
+.screen_view {
+    height: 100vh;
+    display: grid;
+    grid-template-areas: "header animation" "login_area animation";
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.header {
+    grid-area: header;
+}
+
+.login_area {
+    grid-area: login_area;
+}
+
+.animation {
+    grid-area: animation;
+}

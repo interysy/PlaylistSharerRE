@@ -9,7 +9,7 @@ const Options = () => {
   return (
     <section id="options">   
         <div className="btns">
-        <Link to = "/transferplaylists"> <Button text = "Start Sharing !" className = "btn"/> </Link> 
+        <Link to = "/transferplaylists"> <Button text = "Start Sharing !" className = "btn" active = {null} /> </Link> 
           {/* <Button  text = "Combine" onClick = {test} className = "btn"/> 
           <Button text = "Synchronise" onClick = {test} className = "btn"/>  */}
         </div>

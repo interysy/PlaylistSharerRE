@@ -1,3 +1,19 @@
- #description {
-     height: 100vh;
- }
+#description {
+    text-align: center;
+    height: fit-content;
+    margin-bottom: 15%;
+}
+
+.description_content {
+    display: grid;
+    grid-template-columns: 40% 35%;
+    grid-gap: 15%;
+}
+
+.description_content p {
+    text-align: left;
+}
+
+.description_heading {
+    margin-bottom: 5%;
+}

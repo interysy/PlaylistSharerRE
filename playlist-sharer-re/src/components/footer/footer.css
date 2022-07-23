@@ -1,4 +1,27 @@
 #footer {
-    position: fixed;
-    bottom: 0;
+    padding: 3rem 1rem;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+.footer_heading {
+    margin: 0 2rem;
+}
+
+.footer_links {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0 auto 3rem;
+    margin: 1rem;
+}
+
+.footer_socials {
+    margin: 1%;
+}
+
+.footer_socials a {
+    font-size: 1.2rem;
 }

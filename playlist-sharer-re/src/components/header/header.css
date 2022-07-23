@@ -2,21 +2,23 @@
     height: 50vh;
 }
 
-#title {
+#title_section_of_page {
     position: relative;
     text-align: center;
     top: 50%;
+    margin: 1% 4%;
 }
 
 #header h1 {
     font-size: 6rem;
-    font-weight: 700;
-    color: var(--color-bg-variant);
+    font-weight: 300;
+    color: var(--color-font);
+    letter-spacing: 0.5rem;
 }
 
 #header small {
     font-size: 2rem;
-    font-weight: 300;
+    font-weight: 700;
     padding: 0.2rem;
     background-color: var(--color-primary);
     max-width: fit-content;

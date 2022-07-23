@@ -21,26 +21,23 @@ function getOAuth2Client() {
 }
 
 async function getAndSetToken(code) {
-    console.log("HERE");
     let { tokens } = await oauth2client.getToken(code);
-    console.log(tokens);
     oauth2client.setCredentials(tokens);
-    return oauth2client.credentials.access_token;
+    return [oauth2client.credentials.access_token, process.env.YOUTUBE_API_KEY];
 }
 
 function getYoutubeAuthenticationLink() {
     const scopes = [
         "https://www.googleapis.com/auth/youtube.readonly",
+        "https://www.googleapis.com/auth/youtubepartner",
+        "https://www.googleapis.com/auth/youtube.third-party-link.creator",
+        "https://www.googleapis.com/auth/youtube.channel-memberships.creator",
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtubepartner-channel-audit",
+        "https://www.googleapis.com/auth/youtube.force-ssl",
+        "https://www.googleapis.com/auth/youtube",
+        "https://www.googleapis.com/auth/youtube.download",
     ]
-
-    // "https://www.googleapis.com/auth/youtubepartner",
-    //     "https://www.googleapis.com/auth/youtube.third-party-link.creator",
-    //     "https://www.googleapis.com/auth/youtube.channel-memberships.creator",
-    //     "https://www.googleapis.com/auth/youtube.upload",
-    //     "https://www.googleapis.com/auth/youtubepartner-channel-audit",
-    //     "https://www.googleapis.com/auth/youtube.force-ssl",
-    //     "https://www.googleapis.com/auth/youtube",
-    //     "https://www.googleapis.com/auth/youtube.download", 
 
     return oauth2client.generateAuthUrl({
         access_type: "online",

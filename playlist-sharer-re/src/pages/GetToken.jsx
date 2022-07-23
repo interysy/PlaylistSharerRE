@@ -10,23 +10,18 @@ import Button from '../components/buttons/Button'
 
 
 class GetToken extends React.Component {
-    constructor() {
-        super();    
-        
-    } 
      
     componentDidMount() {    
         let received = new URLSearchParams(window.location.search); 
         let success = received.get('success'); 
         let type = received.get('type');  
-        console.log(type);
         if (success) {  
             let token = received.get('access_token');  
             if (type === 'spotify') {  
-                console.log("Handling spo");
-                this.props.loginSpotify(token,true);
+                this.props.loginSpotify(token , true);
             } else if (type === 'youtube') {  
-                this.props.loginYoutube(token, true);
+                let api_key = received.get('api_key'); 
+                this.props.loginYoutube(token, api_key , true);
             }
         }
         

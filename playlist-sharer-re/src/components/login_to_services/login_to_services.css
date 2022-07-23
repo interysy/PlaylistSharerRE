@@ -1,0 +1,51 @@
+#login_to_services {
+    margin: 1% 1%;
+    text-align: center;
+}
+
+#login_to_services div {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.first_row_of_service {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.first_row_of_service>span {
+    color: var(--color-font);
+    font-weight: 700;
+}
+
+.div_that_contains_dot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.music_service {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+}
+
+.btn {
+    color: var(--color-white);
+    font-weight: 700;
+}
+
+.btn:hover {
+    transition: 400ms;
+    filter: brightness(75%);
+}

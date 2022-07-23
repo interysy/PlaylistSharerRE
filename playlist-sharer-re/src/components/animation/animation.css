@@ -1,4 +1,34 @@
 #animation {
-    width: 10vh;
-    height: 20vh;
+    margin: 5%;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: "youtube . ." ". . spotify";
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 5rem;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.logo_container {
+    border: solid 1px black;
+    width: fit-content;
+    padding: 4rem 2rem;
+    border-radius: 5%;
+}
+
+.img {
+    max-width: 150px;
+}
+
+.youtube {
+    grid-area: youtube;
+}
+
+.spotify {
+    grid-area: spotify;
 }

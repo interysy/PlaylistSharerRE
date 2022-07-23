@@ -1,0 +1,28 @@
+ .playlist_with_check {
+     display: grid;
+     grid-template-columns: 5% 80%;
+     gap: 15%;
+ }
+ 
+ .playlist {
+     border: 1px solid blue;
+     padding: 0.2rem;
+     display: flex;
+     flex-direction: column;
+     min-height: fit-content;
+     max-width: 100px;
+ }
+ 
+ .playlist>* {
+     overflow: auto;
+ }
+ 
+ .image {
+     max-width: 100px;
+ }
+ 
+ .selected_playlist {
+     position: relative;
+     right: 0;
+     top: 50%;
+ }
