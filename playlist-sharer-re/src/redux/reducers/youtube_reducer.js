@@ -5,6 +5,7 @@ const default_state = {
     loaded: false,
     playlists_to_transfer: [],
     selected_playlists_youtube: new Set(),
+    created_playlists: [],
     songs_failed_to_transfer: []
 }
 
@@ -19,6 +20,8 @@ const youtube_reducer = (state = default_state, action) => {
             return {...state, playlists_to_transfer: action.payload.playlists_to_transfer, loaded: true }
         case 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE':
             return {...state, selected_playlists_youtube: action.payload.playlists }
+        case 'ADD_PLAYLISTS_YOUTUBE':
+            return {...state, created_playlists: action.payload.created_playlists }
         default:
             return state;
 

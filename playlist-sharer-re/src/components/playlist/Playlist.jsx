@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import './playlist.css'
  
 
-
+// idx % name % type % id
 const Playlist = ({name , id , image , description , owner , onChange , type , idx}) => { 
   return (
     <div className = "playlist_with_check">  
         <label class="selected_playlist">
-          <input type="checkbox" id = {idx + type + id} onChange = {onChange}></input>
+          <input type="checkbox" id = {name + "%" + type + "%" + id} onChange = {onChange}></input>
         </label> 
         <div className = "playlist">
           <img src={image} className = "image" alt="Playlist Image"/>

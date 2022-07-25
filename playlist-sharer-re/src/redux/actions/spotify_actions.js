@@ -1,4 +1,4 @@
-import { getPlaylists, getTracksFromPlaylist } from '../../spotify/spotify_funcs';
+import { getPlaylists, getTracksFromPlaylist, getTracksFromPlaylists } from '../../spotify/spotify_funcs';
 
 
 
@@ -6,6 +6,7 @@ export const LOG_IN_SPOTIFY = 'LOG_IN_SPOTIFY';
 export const LOG_OUT_SPOTIFY = 'LOG_OUT_SPOTIFY';
 export const GET_PLAYLISTS_SPOTIFY = 'GET_PLAYLISTS_SPOTIFY';
 export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY'
+export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST'
 
 
 export function loginSpotify(token, logged_in) {
@@ -46,4 +47,14 @@ export function getPlaylistsSpotify(token) {
 
 export function storePlaylistsToTransferSpotify(playlists) {
     return { type: STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY, payload: { playlists: playlists } };
+}
+
+
+export function searchForTracksPerPlaylistSpotify(selectedPlaylists, spotifyToken) {
+
+    return (dispatch) => {
+        let results = getTracksFromPlaylists(spotifyToken, selectedPlaylists);
+        console.log(results);
+    }
+
 }

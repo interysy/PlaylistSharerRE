@@ -1,9 +1,12 @@
-import { getPlaylists } from '../../youtube/youtube_funcs'
+import { createPlaylistYoutube, getPlaylists, createPlaylistsYoutube } from '../../youtube/youtube_funcs'
+import { addToPlaylist } from '../../youtube/youtube_funcs'
 
 export const LOG_IN_YOUTUBE = 'LOG_IN_YOUTUBE';
 export const LOG_OUT_YOUTUBE = 'LOG_OUT_YOUTUBE';
 export const GET_PLAYLISTS_YOUTUBE = 'GET_PLAYLISTS_YOUTUBE';
-export const STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE = 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE'
+export const STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE = 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE';
+export const ADD_PLAYLISTS_YOUTUBE = 'ADD_PLAYLISTS_YOUTUBE';
+export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST'
 
 export function loginYoutube(token, api_key) {
     return { type: LOG_IN_YOUTUBE, payload: { token: token, api_key: api_key, logged_in: true } };
@@ -38,4 +41,17 @@ export function getPlaylistsYoutube(token, api_key) {
 
 export function storePlaylistsToTransferYoutube(playlists) {
     return { type: STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, payload: { playlists: playlists } };
+}
+
+export function addPlaylistsToTransferYoutube(playlists, token, apiKey) {
+
+    return (dispatch) => {
+        let results = createPlaylistsYoutube(playlists, [], token, apiKey)
+        dispatch({
+            type: ADD_PLAYLISTS_YOUTUBE,
+            payload: { created_playlists: results }
+        })
+
+    }
+
 }

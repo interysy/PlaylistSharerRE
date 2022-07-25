@@ -28,6 +28,16 @@ app.get('/logingoogle', function(req, res) {
 })
 
 
+// app.get('/authenticatespotify', function(req, res) { 
+//     let access_token = req.query.access_token || null;
+//     let state = req.query.state || null;
+
+//     console.log(access_token);
+//     if (state === current_state) {
+//         res.redirect(REDIRECT_TO_REACT + '?success=' + true + "&type=spotify" + '&access_token=' + access_token);
+//     }
+// })
+
 app.get('/authenticatespotify', function(req, res) {
     let code = req.query.code || null;
     let state = req.query.state || null;

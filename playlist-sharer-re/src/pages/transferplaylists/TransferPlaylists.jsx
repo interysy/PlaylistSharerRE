@@ -24,18 +24,13 @@ class TransferPlaylists extends React.Component {
         this.spotify_selected_playlists = new Set(); 
         this.youtube_selected_playlists = new Set(); 
 
-        this.get_playlists = this.get_playlists.bind(this);    
-        this.handle_checkbox = this.handle_checkbox.bind(this); 
+        this.getPlaylists = this.getPlaylists.bind(this);    
+        this.handleCheckbox = this.handleCheckbox.bind(this); 
         this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this)
         
     } 
-     
-    extractIdx(id) {  
-      return parseInt(id);
-
-    }
     
-    finished_loading() {  
+    finishedLoading() {  
       return ( 
         <div id = "transfer_playlists">    
           <div class ='options'>
@@ -46,11 +41,11 @@ class TransferPlaylists extends React.Component {
           <div id = "playlists"> 
             <div className="service"> 
             <h3> Spotify </h3>
-            {this.state.spotify_playlist_data.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handle_checkbox} type = "Spotify" idx = {idx} />))} 
+            {this.state.spotify_playlist_data.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))} 
             </div> 
             <div className="service"> 
             <h3> Youtube </h3>
-            {this.state.youtube_playlist_data.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handle_checkbox} type = "Youtube" idx = {idx}/>))} 
+            {this.state.youtube_playlist_data.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))} 
             </div>            
            </div>         
          </div>
@@ -58,43 +53,41 @@ class TransferPlaylists extends React.Component {
     } 
       
     setStateBeforeRedirect() {  
-      console.log(this.spotify_selected_playlists); 
-      console.log(this.youtube_selected_playlists);
       this.props.storePlaylistsToTransferSpotify(this.spotify_selected_playlists); 
       this.props.storePlaylistsToTransferYoutube(this.youtube_selected_playlists);
     } 
     
-    handle_checkbox(event) { 
+    handleCheckbox(event) {  
       let target = event.target;      
       let id = target.id; 
-      let idx = this.extractIdx(id);  
-      let idxLength = idx.toString().length; 
-
+      id = id.split("%");  
+      let name = id[0] 
+      let type = id[1] 
+      let playlistId = id[2] 
+       
       if (target.checked) {
-        if (id.substring(idxLength).startsWith("Spotify")) {  
-            this.spotify_selected_playlists.add((idx.toString() + ',' + id.substring(idxLength + 7)));
-        } else if (id.substring(idxLength).startsWith("Youtube")) {    
-            this.youtube_selected_playlists.add(idx.toString() + ',' + id.substring(idxLength+7) );
+        if (type == "Spotify") {  
+            this.spotify_selected_playlists.add((name + "%" + playlistId));
+        } else if (type == "Youtube") {    
+            this.youtube_selected_playlists.add((name + "%" + playlistId));
         }  
-    } else {   
-      if (id.substring(idxLength).startsWith("Spotify")) { 
-        this.spotify_selected_playlists.delete(idx.toString() + ','+ id.substring(idxLength  + 7) );
-    } else if (id.substring(idxLength).startsWith("Youtube")) {    
-        this.youtube_selected_playlists.delete(idx.toString() + ',' +  id.substring(idxLength + 7) );
-    } 
+      } else {   
+        if (type == "Spotify") { 
+          this.spotify_selected_playlists.delete((name + "%" + playlistId));
+        } else if (type == "Youtube") {    
+          this.youtube_selected_playlists.delete((name + "%" + playlistId));
+        } 
      
-    } 
-    console.log(this.spotify_selected_playlists); 
-    console.log(this.youtube_selected_playlists);  
+      } 
     }
     
-    get_playlists() {   
+    getPlaylists() {   
        this.props.getPlaylistsSpotify(this.props.access_token_spotify) 
        this.props.getPlaylistsYoutube(this.props.access_token_youtube , this.props.api_key_youtube)
     }  
       
     componentDidMount() { 
-      this.get_playlists(); 
+      this.getPlaylists(); 
     }
      
     componentDidUpdate(prevProps, prevState) {   
@@ -114,7 +107,7 @@ class TransferPlaylists extends React.Component {
     render() {
         return ( 
             <div>      
-                {( !this.state.loading && this.state.spotify_playlist_data.length > 0) ? this.finished_loading() : <h1>Loading</h1>} 
+                {( !this.state.loading && this.state.spotify_playlist_data.length > 0) ? this.finishedLoading() : <h1>Loading</h1>} 
             </div>  
           
         );

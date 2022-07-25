@@ -21,6 +21,7 @@ export function getTracksFromPlaylistYoutube(token, api_key, playlist) {
 
 }
 export function insertIntoPlaylist(token, api_key, playlist, video) {
+    console.log("Adding to playlist");
     let url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=id%2Csnippet&key=' + api_key;
     let options = {
         'method': 'POST',
@@ -63,7 +64,9 @@ export function searchForTrack(token, api_key, artist, title) {
     }).catch((error) => console.log(error));
 }
 
-export function createPlaylist(token, api_key, title) {
+export function createPlaylistYoutube(token, api_key, title) {
+    console.log("Creating Single");
+
     let description = 'Playlist shared from Spotify!';
     let url = 'https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus&key=' + api_key;
     let options = {
@@ -111,4 +114,26 @@ export function getData(url, data, resolve, reject, token) {
             console.log(error)
             reject(error)
         })
+}
+
+
+
+export function createPlaylistsYoutube(playlists, data, token, apiKey) {
+    if (playlists.length > 0) {
+        let currentPlaylist = playlists.shift();
+        let currentPlaylistSplit = currentPlaylist.split("%");
+        let currentPlaylistName = currentPlaylistSplit[0];
+        let currentPlaylistId = currentPlaylistSplit[1];
+
+        createPlaylistYoutube(token, apiKey, currentPlaylistName).then((response) => {
+            data.push({
+                name: currentPlaylistName,
+                newId: response,
+                oldId: currentPlaylistId
+            });
+            createPlaylistsYoutube(playlists, data, token, apiKey);
+        })
+    } else {
+        return data
+    }
 }
