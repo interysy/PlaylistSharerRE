@@ -1,8 +1,8 @@
 import React from 'react'; 
 import { connect } from 'react-redux';  
 import { bindActionCreators } from 'redux';
-import { loginSpotify } from '../../redux/actions/spotify_actions' 
-import { loginYoutube } from '../../redux/actions/youtube_actions' 
+import { loginSpotifyAction } from '../../redux/actions/spotify_actions' 
+import { loginYoutubeAction } from '../../redux/actions/youtube_actions' 
 import { Link } from 'react-router-dom' 
 import './gettoken.css' 
 import Footer from '../../components/footer/Footer' 
@@ -24,10 +24,8 @@ class GetToken extends React.Component {
                 this.props.loginYoutube(token, api_key , true);
             }
         }
-        
     } 
      
-
     render() { 
         return (
             <div id="get_token">   
@@ -50,8 +48,8 @@ const mapStateToProps = (state) => {
  
 const mapDispatchToProps = (dispatch) => { 
     return { 
-        loginSpotify : bindActionCreators(loginSpotify , dispatch),
-        loginYoutube : bindActionCreators(loginYoutube , dispatch)
+        loginSpotify : bindActionCreators(loginSpotifyAction , dispatch),
+        loginYoutube : bindActionCreators(loginYoutubeAction , dispatch)
     } 
 
 }

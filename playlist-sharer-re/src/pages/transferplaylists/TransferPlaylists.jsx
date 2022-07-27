@@ -1,9 +1,9 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux';
-import { getPlaylistsSpotify , storePlaylistsToTransferSpotify } from '../../redux/actions/spotify_actions'; 
+import { getPlaylistsSpotifyAction , storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
 import Playlist from '../../components/playlist/Playlist'
-import { getPlaylistsYoutube , storePlaylistsToTransferYoutube } from '../../redux/actions/youtube_actions'; 
+import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions'; 
 import './transfer_playlists.css' 
 import Button from '../../components/buttons/Button' 
 import { Link } from 'react-router-dom'
@@ -17,12 +17,12 @@ class TransferPlaylists extends React.Component {
         super(props);    
         this.state = { 
           loading : true, 
-          spotify_playlist_data :[], 
-          youtube_playlist_data : [], 
+          spotifyPlaylists :[], 
+          youtubePlaylists : [], 
         }    
  
-        this.spotify_selected_playlists = new Set(); 
-        this.youtube_selected_playlists = new Set(); 
+        this.spotifySelectedPlaylists = new Set(); 
+        this.youtubeSelectedPlaylists = new Set(); 
 
         this.getPlaylists = this.getPlaylists.bind(this);    
         this.handleCheckbox = this.handleCheckbox.bind(this); 
@@ -41,11 +41,11 @@ class TransferPlaylists extends React.Component {
           <div id = "playlists"> 
             <div className="service"> 
             <h3> Spotify </h3>
-            {this.state.spotify_playlist_data.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))} 
+            {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))} 
             </div> 
             <div className="service"> 
             <h3> Youtube </h3>
-            {this.state.youtube_playlist_data.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))} 
+            {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))} 
             </div>            
            </div>         
          </div>
@@ -53,8 +53,8 @@ class TransferPlaylists extends React.Component {
     } 
       
     setStateBeforeRedirect() {  
-      this.props.storePlaylistsToTransferSpotify(this.spotify_selected_playlists); 
-      this.props.storePlaylistsToTransferYoutube(this.youtube_selected_playlists);
+      this.props.storePlaylistsToTransferSpotify(this.spotifySelectedPlaylists); 
+      this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
     } 
     
     handleCheckbox(event) {  
@@ -67,23 +67,23 @@ class TransferPlaylists extends React.Component {
        
       if (target.checked) {
         if (type == "Spotify") {  
-            this.spotify_selected_playlists.add((name + "%" + playlistId));
+            this.spotifySelectedPlaylists.add((name + "%" + playlistId));
         } else if (type == "Youtube") {    
-            this.youtube_selected_playlists.add((name + "%" + playlistId));
+            this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
         }  
       } else {   
         if (type == "Spotify") { 
-          this.spotify_selected_playlists.delete((name + "%" + playlistId));
+          this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
         } else if (type == "Youtube") {    
-          this.youtube_selected_playlists.delete((name + "%" + playlistId));
+          this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
         } 
      
       } 
     }
     
     getPlaylists() {   
-       this.props.getPlaylistsSpotify(this.props.access_token_spotify) 
-       this.props.getPlaylistsYoutube(this.props.access_token_youtube , this.props.api_key_youtube)
+       this.props.getPlaylistsSpotify(this.props.accessTokenSpotify) 
+       this.props.getPlaylistsYoutube(this.props.accessTokenYoutube , this.props.apiKeyYoutube)
     }  
       
     componentDidMount() { 
@@ -91,10 +91,10 @@ class TransferPlaylists extends React.Component {
     }
      
     componentDidUpdate(prevProps, prevState) {   
-      if ((this.props.playlists_loaded_youtube !== false || this.props.playlists_loaded_spotify !== false) && prevProps != this.props) {  
+      if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps != this.props) {  
         this.setState({  
-          spotify_playlist_data : this.props.playlists_to_transfer_spotify, 
-          youtube_playlist_data : this.props.playlists_to_transfer_youtube
+          spotifyPlaylists : this.props.playlistsSpotify, 
+          youtubePlaylists : this.props.playlistsYoutube,
         } , () => {  
           this.setState({ 
             ...this.state , 
@@ -107,7 +107,7 @@ class TransferPlaylists extends React.Component {
     render() {
         return ( 
             <div>      
-                {( !this.state.loading && this.state.spotify_playlist_data.length > 0) ? this.finishedLoading() : <h1>Loading</h1>} 
+                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : <h1>Loading</h1>} 
             </div>  
           
         );
@@ -116,17 +116,15 @@ class TransferPlaylists extends React.Component {
   
 const mapStateToProps = (state) => {  
     return {  
-        access_token_spotify : state.spotify_reducer.token, 
-        access_token_youtube : state.youtube_reducer.token,  
-        api_key_youtube : state.youtube_reducer.api_key, 
-        logged_in_spotify : state.spotify_reducer.logged_in, 
-        logged_in_youtube : state.youtube_reducer.logged_in, 
-        playlists_to_transfer_spotify : state.spotify_reducer.playlists_to_transfer || [],  
-        playlists_to_transfer_youtube : state.youtube_reducer.playlists_to_transfer || [],  
-        songs_failed_to_transfer_spotify : state.spotify_reducer.failed_to_transfer, 
-        songs_failed_to_transfer_youtube : state.youtube_reducer.failed_to_transfer,   
-        playlists_loaded_spotify : state.spotify_reducer.loaded, 
-        playlists_loaded_youtube : state.youtube_reducer.loaded,
+        accessTokenSpotify : state.spotify_reducer.token, 
+        accessTokenYoutube: state.youtube_reducer.token,  
+        apiKeyYoutube : state.youtube_reducer.apiKey, 
+        loggedInSpotify : state.spotify_reducer.loggedIn, 
+        loggedInYoutube : state.youtube_reducer.loggedIn, 
+        playlistsSpotify : state.spotify_reducer.playlists || [],  
+        playlistsYoutube : state.youtube_reducer.playlists || [],     
+        loadedSpotify : state.spotify_reducer.loaded, 
+        loadedYoutube : state.youtube_reducer.loaded,
 
     }
 
@@ -134,10 +132,10 @@ const mapStateToProps = (state) => {
  
 const mapDispatchToProps = (dispatch) => {   
   return {   
-    getPlaylistsSpotify : bindActionCreators(getPlaylistsSpotify , dispatch), 
-    getPlaylistsYoutube : bindActionCreators(getPlaylistsYoutube , dispatch), 
-    storePlaylistsToTransferSpotify : bindActionCreators( storePlaylistsToTransferSpotify , dispatch), 
-    storePlaylistsToTransferYoutube : bindActionCreators( storePlaylistsToTransferYoutube , dispatch),
+    getPlaylistsSpotify : bindActionCreators(getPlaylistsSpotifyAction , dispatch), 
+    getPlaylistsYoutube : bindActionCreators(getPlaylistsYoutubeAction , dispatch), 
+    storePlaylistsToTransferSpotify : bindActionCreators( storePlaylistsToTransferSpotifyAction , dispatch), 
+    storePlaylistsToTransferYoutube : bindActionCreators( storePlaylistsToTransferYoutubeAction , dispatch),
 
   } 
 

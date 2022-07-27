@@ -9,7 +9,7 @@ const Footer = () => {
       <a href=" " className="footer_heading">PlaylistSharerRE</a> 
         
       <ul className="footer_links"> 
-        <li><a href="#">Index</a></li> 
+        <li><a>Index</a></li> 
         <li><a href="#description">Description</a></li> 
         <li><a href="#contactme">Contact Me</a></li> 
         <li><a href="#privacy">Privacy Policy</a></li> 

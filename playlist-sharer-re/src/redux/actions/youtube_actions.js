@@ -1,24 +1,23 @@
-import { createPlaylistYoutube, getPlaylists, createPlaylistsYoutube } from '../../youtube/youtube_funcs'
-import { addToPlaylist } from '../../youtube/youtube_funcs'
+import { getPlaylistsYoutubeFunc, createPlaylistsYoutube, getTracksToTransferToPlaylists, transferToYoutube } from '../../youtube/youtube_funcs'
+
 
 export const LOG_IN_YOUTUBE = 'LOG_IN_YOUTUBE';
 export const LOG_OUT_YOUTUBE = 'LOG_OUT_YOUTUBE';
 export const GET_PLAYLISTS_YOUTUBE = 'GET_PLAYLISTS_YOUTUBE';
 export const STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE = 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE';
-export const ADD_PLAYLISTS_YOUTUBE = 'ADD_PLAYLISTS_YOUTUBE';
-export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST'
+export const UPDATE_FAILED_SONGS = 'UPDATE_FAILED_SONGS'
 
-export function loginYoutube(token, api_key) {
-    return { type: LOG_IN_YOUTUBE, payload: { token: token, api_key: api_key, logged_in: true } };
+export function loginYoutubeAction(token, apiKey) {
+    return { type: LOG_IN_YOUTUBE, payload: { token: token, apiKey: apiKey, loggedIn: true } };
 }
 
-export function logoutYoutube() {
+export function logoutYoutubeAction() {
     return { type: LOG_OUT_YOUTUBE };
 }
 
-export function getPlaylistsYoutube(token, api_key) {
+export function getPlaylistsYoutubeAction(token, api_key) {
     return (dispatch) => {
-        getPlaylists(token, api_key).then((response) => {
+        getPlaylistsYoutubeFunc(token, api_key).then((response) => {
             let results = [];
             response[0].map((element) => {
                 let playlist = {
@@ -32,26 +31,24 @@ export function getPlaylistsYoutube(token, api_key) {
             })
             dispatch({
                 type: GET_PLAYLISTS_YOUTUBE,
-                payload: { playlists_to_transfer: results }
+                payload: { playlists: results }
             })
 
         })
     }
 }
 
-export function storePlaylistsToTransferYoutube(playlists) {
+export function storePlaylistsToTransferYoutubeAction(playlists) {
     return { type: STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, payload: { playlists: playlists } };
 }
 
-export function addPlaylistsToTransferYoutube(playlists, token, apiKey) {
 
+export function transferToYoutubeAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
     return (dispatch) => {
-        let results = createPlaylistsYoutube(playlists, [], token, apiKey)
+        let failed = transferToYoutube(playlists, spotifyToken, youtubeToken, youtubeApiKey);
         dispatch({
-            type: ADD_PLAYLISTS_YOUTUBE,
-            payload: { created_playlists: results }
+            type: UPDATE_FAILED_SONGS,
+            payload: { failedSongs: failed },
         })
-
     }
-
 }

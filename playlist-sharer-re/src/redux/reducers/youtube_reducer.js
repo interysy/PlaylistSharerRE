@@ -1,27 +1,27 @@
 const default_state = {
-    logged_in: false,
+    loggedIn: false,
     token: '',
-    api_key: '',
+    apiKey: '',
     loaded: false,
-    playlists_to_transfer: [],
-    selected_playlists_youtube: new Set(),
-    created_playlists: [],
-    songs_failed_to_transfer: []
+    playlists: [],
+    selectedPlaylists: new Set(),
+    failedSongs: [],
+    completedTransfer: false,
 }
 
 
 const youtube_reducer = (state = default_state, action) => {
     switch (action.type) {
         case 'LOG_IN_YOUTUBE':
-            return {...state, token: action.payload.token, api_key: action.payload.api_key, logged_in: action.payload.logged_in }
+            return {...state, token: action.payload.token, apiKey: action.payload.apiKey, loggedIn: action.payload.loggedIn }
         case 'LOG_OUT_YOUTUBE':
             return default_state;
         case 'GET_PLAYLISTS_YOUTUBE':
-            return {...state, playlists_to_transfer: action.payload.playlists_to_transfer, loaded: true }
+            return {...state, playlists: action.payload.playlists, loaded: true }
         case 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE':
-            return {...state, selected_playlists_youtube: action.payload.playlists }
-        case 'ADD_PLAYLISTS_YOUTUBE':
-            return {...state, created_playlists: action.payload.created_playlists }
+            return {...state, selectedPlaylists: action.payload.playlists }
+        case 'UPDATE_FAILED_SONGS':
+            return {...state, failedSongs: action.payload.failedSongs, completedTransfer: true }
         default:
             return state;
 

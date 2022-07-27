@@ -11,7 +11,7 @@ const Playlist = ({name , id , image , description , owner , onChange , type , i
           <input type="checkbox" id = {name + "%" + type + "%" + id} onChange = {onChange}></input>
         </label> 
         <div className = "playlist">
-          <img src={image} className = "image" alt="Playlist Image"/>
+          <img src={image} className = "image"/>
           <ul>  
               <li>HA {name}</li>
               <li>HA {description}</li> 
