@@ -12,3 +12,8 @@
 #get_token Button {
     width: fit-content;
 }
+
+.stick_to_bottom {
+    position: absolute;
+    bottom: 0;
+}

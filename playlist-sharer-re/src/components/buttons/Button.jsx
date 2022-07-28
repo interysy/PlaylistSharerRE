@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types' 
 import './button.css'
 
-const Button = ({text, onClick , active}) => {  
+const Button = ({text, onClick , active ,classes}) => {  
   let color;   
   if (active === null) { 
     color = "#CAEBF2"
@@ -10,8 +10,8 @@ const Button = ({text, onClick , active}) => {
     (active ? color = "#17b890": color = "#a85751");  
   }
 
-  return (
-    <a className = "btn" onClick = {onClick} style = {{ background : color }}> 
+  return ( 
+    <a className = {classes} onClick = {onClick} style = {{ background : color }}> 
         {text} 
     </a>
   )
@@ -24,7 +24,8 @@ Button.defaultProps = {
 Button.propTypes = {
     text: PropTypes.string.isRequired,
     active: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired, 
+    classes : PropTypes.string,
 } 
 
 export default Button

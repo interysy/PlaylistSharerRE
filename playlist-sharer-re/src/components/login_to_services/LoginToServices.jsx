@@ -32,7 +32,7 @@ const Login = () => {
               <span className = "dot" style = {{ backgroundColor : (loggedInSpotify) ? "#17b890" : "#a85751"}}></span> 
             </div> 
           </div> 
-          <Button className = "btn" text = {(loggedInSpotify) ? "Log Out" : "Log In"} onClick={(loggedInSpotify) ? function() {dispatch(logoutSpotifyAction())} : showSpotifyForm} active = { (loggedInSpotify) }/>
+          <Button className = "btn" text = {(loggedInSpotify) ? "Log Out" : "Log In"} onClick={(loggedInSpotify) ? function() {dispatch(logoutSpotifyAction())} : showSpotifyForm} active = { (loggedInSpotify) } classes = "btn"/>
         </div> 
         <div class = "music_service"> 
           <div className='first_row_of_service'>
@@ -41,7 +41,7 @@ const Login = () => {
               <span className = "dot" style =  {{ backgroundColor : (loggedInYoutube) ? "#17b890" : "#a85751"}}></span> 
             </div> 
           </div>
-          <Button className = "btn" text = {(loggedInYoutube) ? "Log Out" : "Log In"} onClick={(loggedInYoutube) ? function() {dispatch(logoutYoutubeAction())}: showYoutubeForm} active = { (loggedInYoutube) }/>
+          <Button className = "btn" text = {(loggedInYoutube) ? "Log Out" : "Log In"} onClick={(loggedInYoutube) ? function() {dispatch(logoutYoutubeAction())}: showYoutubeForm} active = { (loggedInYoutube) } classes = "btn"/>
         </div> 
     </div>
   </div> 

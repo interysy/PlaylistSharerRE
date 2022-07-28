@@ -3,7 +3,7 @@ import './contactme.css'
 import {MdOutlineEmail} from 'react-icons/md'  
 import {TbBrandDiscord} from 'react-icons/tb' 
  
-let messageMe = function(event) { 
+let messageMe = function(event) {  
   event.preventDefault(); 
   let name = event.target[0].value; 
   let email = event.target[1].value; 
@@ -21,7 +21,7 @@ let messageMe = function(event) {
     }],
   };  
    
-  const webhookUrl = 'https://discord.com/api/webhooks/999824629113827448/hL2EJgX3uN9mmEDOMr5Ninvt8W7NEWfYWSP3YQRzkLaFAcOqnNmHdOrWrNGCGMffAB3i'; 
+  const webhookUrl = ""
    
   let response = fetch(webhookUrl, {
     method: 'POST',
@@ -31,7 +31,7 @@ let messageMe = function(event) {
     body: JSON.stringify(webhookOptions),
   }).then( (response) => { 
     if (response.ok) { 
-      console.log("Form submitted");
+      document.getElementsByClassName("contactme_form").append("<p> Successfully Sent! Await my response..</p>")
     }
   }).catch((error) => console.log(error));
   

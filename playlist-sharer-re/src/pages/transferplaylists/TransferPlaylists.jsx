@@ -6,7 +6,9 @@ import Playlist from '../../components/playlist/Playlist'
 import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions'; 
 import './transfer_playlists.css' 
 import Button from '../../components/buttons/Button' 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom' 
+import YoutubeLogo from '../../assets/logos/yt_logo_rgb_light.png'  
+import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png'
 
   
 
@@ -26,7 +28,8 @@ class TransferPlaylists extends React.Component {
 
         this.getPlaylists = this.getPlaylists.bind(this);    
         this.handleCheckbox = this.handleCheckbox.bind(this); 
-        this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this)
+        this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this); 
+        this.refreshPlaylists = this.refreshPlaylists.bind(this);
         
     } 
     
@@ -34,23 +37,38 @@ class TransferPlaylists extends React.Component {
       return ( 
         <div id = "transfer_playlists">    
           <div class ='options'>
-          <Link to = "/"> <Button text = "Return To Home Page" className = "btn"/> </Link> 
-          <Link to = "/results"> <Button onClick = {this.setStateBeforeRedirect} text = "Transfer Selected" className = "btn"/> </Link> 
+            <Link to = "/"> <Button text = "Return To Home Page" classes = "btn"/> </Link> 
+            <Link to = "/results"> <Button onClick = {this.setStateBeforeRedirect} text = "Transfer Selected" classes = "btn"/> </Link>  
           </div>
           <h1>Please select playlists to transfer to another platform</h1> 
           <div id = "playlists"> 
             <div className="service"> 
-            <h3> Spotify </h3>
-            {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))} 
-            </div> 
+              <img class = "header_img" src = {SpotifyLogo} alt = "Spotify Logo"></img> 
+              <input type="text" className = "search_bar" placeholder="Search.."></input> 
+              <div className="service_playlists">
+                {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))}  
+              </div>
+            </div>  
+            <Button text = "Refresh Playlists" onClick = {this.refreshPlaylists} classes = "btn refresh_btn" ></Button> 
             <div className="service"> 
-            <h3> Youtube </h3>
-            {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))} 
+            <img class = "header_img" src = {YoutubeLogo} alt = "Youtube Logo"></img>  
+              <input type="text" className = "search_bar" placeholder="Search.."></input> 
+              <div className="service_playlists">
+                {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))}  
+              </div>
             </div>            
-           </div>         
+           </div>   
+                 
          </div>
       )
-    } 
+    }  
+     
+    refreshPlaylists() { 
+      this.setState({loading:true}, 
+        () => { 
+          this.getPlaylists();
+        })
+    }
       
     setStateBeforeRedirect() {  
       this.props.storePlaylistsToTransferSpotify(this.spotifySelectedPlaylists); 

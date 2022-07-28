@@ -13,9 +13,9 @@ const Playlist = ({name , id , image , description , owner , onChange , type , i
         <div className = "playlist">
           <img src={image} className = "image"/>
           <ul>  
-              <li>HA {name}</li>
-              <li>HA {description}</li> 
-              <li> HA {owner}</li> 
+              <li>{name}</li>
+              {/* <li>HA {description}</li>  */}
+              <li> By :  {owner}</li> 
           </ul>   
           </div>
     </div>

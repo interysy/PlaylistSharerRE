@@ -8,7 +8,6 @@ import Results from './pages/results/Results'
 import Error from './pages/error/Error'
  
 import './App.css'; 
- 
 
 function App() {
     return ( 

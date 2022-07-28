@@ -1,5 +1,5 @@
 #animation {
-    margin: 5%;
+    margin: 1%;
 }
 
 #grid {
@@ -31,4 +31,10 @@
 
 .spotify {
     grid-area: spotify;
+}
+
+@media screen and (max-width: 1024px) {
+    #animation {
+        display: none;
+    }
 }

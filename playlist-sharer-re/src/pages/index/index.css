@@ -16,3 +16,17 @@
 .animation {
     grid-area: animation;
 }
+
+@media screen and (max-width: 1024px) {
+    .screen_view {
+        grid-template-columns: 1fr;
+        grid-template-areas: "header" "login_area";
+        grid-template-rows: repeat(2, 1fr);
+        grid-gap: 3rem;
+    }
+    .animation {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px) {}

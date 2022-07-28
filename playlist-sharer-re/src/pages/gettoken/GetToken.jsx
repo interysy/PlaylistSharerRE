@@ -30,8 +30,8 @@ class GetToken extends React.Component {
         return (
             <div id="get_token">   
                 <h1>PlaylistSharerRe</h1>
-                <Link to = "/"> <Button text = "Click Here To Return"/></Link>  
-                <Footer/>
+                <Link to = "/"> <Button text = "Click Here To Return" classes = "btn"/></Link>  
+                <Footer className = "stick_to_bottom"/>
             </div>
         );
     }

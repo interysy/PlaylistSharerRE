@@ -9,27 +9,39 @@
 }
 
 .service {
-    height: 80vh;
+    margin: 1rem;
+    border-bottom: 2px solid black;
+    padding: 1rem;
+}
+
+.service>* {
+    margin: 0.5rem;
+}
+
+.service_playlists {
+    height: 65vh;
     overflow: auto;
     min-width: fit-content;
-    padding: 1rem 2rem 2rem 2rem;
-    border: 5px solid blue;
-    border-radius: 1.5rem;
-    margin: 2rem;
-}
-
-.service h3 {
-    padding-bottom: 0.5rem;
-}
-
-.return_btn {
-    display: absolute;
-    left: 0;
-    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .options {
     display: flex;
     justify-content: space-between;
     margin: 2rem 3rem;
+}
+
+.refresh_btn {
+    height: min-content;
+    position: relative;
+}
+
+.search_bar {
+    border-radius: 2rem;
+}
+
+.header_img {
+    max-width: 100px;
 }
