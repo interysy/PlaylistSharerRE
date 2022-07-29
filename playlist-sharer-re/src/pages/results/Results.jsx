@@ -1,7 +1,8 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux'; 
-import { transferToYoutubeAction } from '../../redux/actions/youtube_actions' 
+import { transferToYoutubeAction } from '../../redux/actions/youtube_actions'  
+import Loader from '../../components/loader/Loader'
 
 class Results extends React.Component {
     constructor(props) {
@@ -9,7 +10,13 @@ class Results extends React.Component {
         this.state = { 
             done : false,
         }  
-    } 
+    }  
+     
+    noPlaylistsToTransfer() { 
+        return ( 
+            <h1>No Playlists To Transfer </h1>
+        )
+    }
       
     componentDidUpdate(prevProps , prevState) {  
         if (this.props.completedTransferYoutube != prevProps.completedTransfer && prevState.done === false) { 
@@ -22,6 +29,8 @@ class Results extends React.Component {
     componentDidMount() { 
         if (this.props.loggedInSpotify === false || this.props.loggedInYoutube === false) { 
             window.location.replace('http://localhost:3001/error');
+        } else if ( this.props.selectedPlaylistsSpotify.length === 0 && this.props.selectedPlaylistsYoutube.length === 0){ 
+            this.noPlaylistsToTransfer();
         } else {   
             this.transferPlaylistsToYoutube(); 
             //this.transferPlaylistsToSpotify();    
@@ -36,7 +45,7 @@ class Results extends React.Component {
     render() {
         return ( 
             <div>      
-                {(this.state.done == true) ? <h1>Done</h1> : <h1>Loading</h1>};
+                {(this.state.done === true) ? <h1>Done</h1> : <Loader/>};
             </div>  
           
         );

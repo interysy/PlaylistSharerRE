@@ -38,7 +38,7 @@ let messageMe = function(event) {
 }
 const ContactMe = () => {
   return (
-    <section id="contactme"> 
+    <section id="contactme" className = "section"> 
       <div className="contactme_heading"> 
         <h4>Want to reach out?</h4> 
         <h1>Contact Me</h1> 

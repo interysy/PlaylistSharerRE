@@ -6,6 +6,7 @@ export const LOG_OUT_YOUTUBE = 'LOG_OUT_YOUTUBE';
 export const GET_PLAYLISTS_YOUTUBE = 'GET_PLAYLISTS_YOUTUBE';
 export const STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE = 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE';
 export const UPDATE_FAILED_SONGS = 'UPDATE_FAILED_SONGS'
+export const ERROR = 'ERROR'
 
 export function loginYoutubeAction(token, apiKey) {
     return { type: LOG_IN_YOUTUBE, payload: { token: token, apiKey: apiKey, loggedIn: true } };
@@ -34,6 +35,12 @@ export function getPlaylistsYoutubeAction(token, api_key) {
                 payload: { playlists: results }
             })
 
+        }).catch((error) => {
+            console.log(error);
+            dispatch({
+                type: ERROR,
+                payload: { error: error }
+            })
         })
     }
 }

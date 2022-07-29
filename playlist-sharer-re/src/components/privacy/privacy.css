@@ -6,4 +6,18 @@
 
 .privacy_content {
     margin: 5%;
+    background-color: var(--color-bg-variant);
+    border: 2px solid;
+    border-radius: 2rem;
+    padding: 2rem;
+    transition: var(--transition);
+}
+
+.privacy_content a {
+    color: var(--color-btns)
+}
+
+.privacy_content:hover {
+    border: 2px solid var(--color-bg-variant);
+    background-color: var(--color-extra);
 }

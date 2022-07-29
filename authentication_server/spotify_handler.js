@@ -18,7 +18,6 @@ function getAuthorisationPageLink() {
         state: state,
         scope: "playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private",
         redirect_uri: REDIRECT_URI,
-        show_dialog: true,
     }), state];
 
 }

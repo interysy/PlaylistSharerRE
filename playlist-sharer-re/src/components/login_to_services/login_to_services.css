@@ -18,7 +18,7 @@
 }
 
 .first_row_of_service>span {
-    color: var(--color-font);
+    color: var(--color-primary);
     font-weight: 700;
 }
 

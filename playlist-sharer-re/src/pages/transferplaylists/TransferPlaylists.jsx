@@ -8,7 +8,9 @@ import './transfer_playlists.css'
 import Button from '../../components/buttons/Button' 
 import { Link } from 'react-router-dom' 
 import YoutubeLogo from '../../assets/logos/yt_logo_rgb_light.png'  
-import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png'
+import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png' 
+import Footer from '../../components/footer/Footer' 
+import Loader from '../../components/loader/Loader'
 
   
 
@@ -17,6 +19,7 @@ class TransferPlaylists extends React.Component {
    
     constructor(props) { 
         super(props);    
+         
         this.state = { 
           loading : true, 
           spotifyPlaylists :[], 
@@ -31,20 +34,57 @@ class TransferPlaylists extends React.Component {
         this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this); 
         this.refreshPlaylists = this.refreshPlaylists.bind(this);
         
+    }  
+     
+    removeFooterLinks() { 
+      document.getElementsByClassName("footer_links")[0].style.display = "none";
     } 
-    
+     
+    showFooterLinks() { 
+      document.getElementsByClassName("footer_links")[0].style.display = "flex";
+    } 
+
+    searchForPlaylist(event) { 
+      let target = event.target; 
+      let type = target.getAttribute("class");  
+      let searchingFor = target.value.toLowerCase(); 
+      console.log(searchingFor)
+      type = type.split(" ")[1];  
+       
+      let divOfPlaylists = target.nextSibling; 
+      let playlists = divOfPlaylists.getElementsByClassName("playlist_with_check"); 
+       
+      for (var i = 0 ; i < playlists.length ; i++) { 
+        let playlist = playlists[i]; 
+        let titleAndOwner = playlist.innerText.replace("By :" , ""); 
+        if (!titleAndOwner.toLowerCase().includes(searchingFor)) { 
+            playlist.style.display = "none";
+        } else { 
+            playlist.style.display = "flex";
+        }
+      }
+    }  
+     
+     
+    loading() { 
+      return (   
+        <Loader/>
+      )
+    } 
+     
+     
     finishedLoading() {  
       return ( 
         <div id = "transfer_playlists">    
           <div class ='options'>
-            <Link to = "/"> <Button text = "Return To Home Page" classes = "btn"/> </Link> 
+            <Link to = "/"> <Button text = "Return To Home Page" classes = "btn"/> </Link>   
+            <h1>Please select playlists to transfer to another platform</h1> 
             <Link to = "/results"> <Button onClick = {this.setStateBeforeRedirect} text = "Transfer Selected" classes = "btn"/> </Link>  
           </div>
-          <h1>Please select playlists to transfer to another platform</h1> 
           <div id = "playlists"> 
             <div className="service"> 
-              <img class = "header_img" src = {SpotifyLogo} alt = "Spotify Logo"></img> 
-              <input type="text" className = "search_bar" placeholder="Search.."></input> 
+              <img class = "header_img" src = {SpotifyLogo} alt = "Spotify Logo" ></img> 
+              <input type="text" className = "search_bar spotify_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
               <div className="service_playlists">
                 {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))}  
               </div>
@@ -52,13 +92,13 @@ class TransferPlaylists extends React.Component {
             <Button text = "Refresh Playlists" onClick = {this.refreshPlaylists} classes = "btn refresh_btn" ></Button> 
             <div className="service"> 
             <img class = "header_img" src = {YoutubeLogo} alt = "Youtube Logo"></img>  
-              <input type="text" className = "search_bar" placeholder="Search.."></input> 
+              <input type="text" className = "search_bar youtube_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
               <div className="service_playlists">
                 {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))}  
               </div>
             </div>            
            </div>   
-                 
+          <Footer socials = "none"/>
          </div>
       )
     }  
@@ -75,7 +115,7 @@ class TransferPlaylists extends React.Component {
       this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
     } 
     
-    handleCheckbox(event) {  
+    handleCheckbox(event) {   
       let target = event.target;      
       let id = target.id; 
       id = id.split("%");  
@@ -104,8 +144,21 @@ class TransferPlaylists extends React.Component {
        this.props.getPlaylistsYoutube(this.props.accessTokenYoutube , this.props.apiKeyYoutube)
     }  
       
-    componentDidMount() { 
-      this.getPlaylists(); 
+    componentDidMount() {    
+      if (this.props.playlistsSpotify.length !== 0 || this.props.playlistsYoutube.length !== 0) { 
+        this.setState({  
+          spotifyPlaylists : this.props.playlistsSpotify, 
+          youtubePlaylists : this.props.playlistsYoutube,
+        } , () => {  
+          this.setState({ 
+            ...this.state , 
+            loading : false,
+        })}); 
+      } else {
+        this.getPlaylists();   
+        // this.removeFooterLinks();
+      } 
+      
     }
      
     componentDidUpdate(prevProps, prevState) {   
@@ -125,7 +178,7 @@ class TransferPlaylists extends React.Component {
     render() {
         return ( 
             <div>      
-                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : <h1>Loading</h1>} 
+                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()} 
             </div>  
           
         );

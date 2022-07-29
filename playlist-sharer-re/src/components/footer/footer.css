@@ -1,12 +1,16 @@
 #footer {
-    padding: 3rem 1rem;
+    padding: 1.5rem 1rem;
     text-align: center;
     font-size: 0.95rem;
     margin-top: 1rem;
+    background-color: var(--color-bg-variant);
+    color: white;
 }
 
 .footer_heading {
     margin: 0 2rem;
+    color: white;
+    font-size: 1.2rem
 }
 
 .footer_links {
@@ -16,6 +20,11 @@
     gap: 2rem;
     margin: 0 auto 3rem;
     margin: 1rem;
+    list-style: none;
+}
+
+.footer_links li a {
+    color: white;
 }
 
 .footer_socials {
@@ -24,4 +33,5 @@
 
 .footer_socials a {
     font-size: 1.2rem;
+    color: white;
 }

@@ -3,6 +3,9 @@
      grid-template-columns: 5% 80%;
      gap: 15%;
      margin: 1.5rem;
+     background-color: var(--color-bg);
+     border-radius: 1.5rem;
+     padding: 0.5rem;
  }
  
  .playlist {
@@ -12,9 +15,7 @@
      align-items: center;
      flex-direction: column;
      min-height: fit-content;
-     max-width: 200px;
-     border-bottom: 1px solid black;
-     border-right: 1px solid black;
+     width: 200px;
  }
  
  .playlist>* {

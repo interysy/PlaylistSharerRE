@@ -7,6 +7,7 @@ const default_state = {
     selectedPlaylists: new Set(),
     failedSongs: [],
     completedTransfer: false,
+    error: '',
 }
 
 
@@ -22,6 +23,8 @@ const youtube_reducer = (state = default_state, action) => {
             return {...state, selectedPlaylists: action.payload.playlists }
         case 'UPDATE_FAILED_SONGS':
             return {...state, failedSongs: action.payload.failedSongs, completedTransfer: true }
+        case 'ERROR':
+            return {...state, error: action.payload.error }
         default:
             return state;
 

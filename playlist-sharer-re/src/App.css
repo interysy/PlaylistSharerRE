@@ -5,15 +5,15 @@
     border: 0;
     outline: 0;
     box-sizing: border-box;
-    list-style: none;
     text-decoration: none;
 }
 
 :root {
-    --color-btns: #FF3B3F;
-    --color-bg: #EFEFEF;
-    --color-bg-variant: #A9A9A9;
-    --color-primary: #CAEBF2;
+    --color-btns: #b342f5;
+    --color-bg: #2D333B;
+    --color-bg-variant: #1C2128;
+    --color-primary: #efefef;
+    --color-extra: #374151;
     --color-white: #fff;
     --color-black: #000000;
     --container-width-lg: 75%;
@@ -33,4 +33,10 @@ html {
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--color-bg);
+}
+
+.section {
+    margin: 8rem 3rem;
+    padding: 2rem;
+    color: var(--color-primary);
 }

@@ -3,20 +3,22 @@ import { connect } from 'react-redux';
 
 import Header from '../../components/header/Header'  
 import LoginToServices from '../../components/login_to_services/LoginToServices'
-import Animation from '../../components/animation/Animation' 
 import Options from '../../components/options/Options' 
 import Description from '../../components/description/Description' 
 import ContactMe from '../../components/contactme/ContactMe' 
 import Privacy from '../../components/privacy/Privacy' 
-import Footer from '../../components/footer/Footer'
+import Footer from '../../components/footer/Footer' 
+import ToggleSwitch from '../../components/toggle_switch/ToggleSwitch';
  
 import './index.css'
 
 class Index extends React.Component {
-      
-    render() {
+     
+    
+    render() { 
         return ( 
-            <div>   
+            <div>    
+                <ToggleSwitch/>
                 <div class = "screen_view">
                     <Header className = "header" />   
                     <div className = "login_area">
@@ -25,7 +27,6 @@ class Index extends React.Component {
                         (this.props.loggedInSpotify && this.props.loggedInYoutube) ? <Options/>: null 
                         }  
                     </div>
-                    <Animation className = "animation"/>
                 </div>
                 <Description/>  
                 <ContactMe/>

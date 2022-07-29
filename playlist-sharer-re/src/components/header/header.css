@@ -12,7 +12,7 @@
 #header h1 {
     font-size: 6rem;
     font-weight: 300;
-    color: var(--color-font);
+    color: var(--color-primary);
     letter-spacing: 0.5rem;
 }
 
@@ -25,4 +25,20 @@
     position: relative;
     bottom: 0.5rem;
     opacity: 0.7;
+}
+
+@media screen and (max-width: 1024px) {
+    #header {
+        height: fit-content;
+        margin: 5rem 1.5rem;
+    }
+    #title_section_of_page {
+        position: static;
+    }
+    #header small {
+        font-size: 1rem;
+    }
+    #header h1 {
+        font-size: 4rem;
+    }
 }

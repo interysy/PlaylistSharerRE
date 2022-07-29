@@ -1,14 +1,16 @@
 import React from 'react' 
 import './footer.css' 
-import { VscGithub } from 'react-icons/vsc'
+import { VscGithub } from 'react-icons/vsc' 
+import { Link } from 'react-router-dom'
 
-const Footer = () => {
+const Footer = ({socials}) => {  
+  console.log(socials);
   return (
     <section id="footer"> 
      
-      <a href=" " className="footer_heading">PlaylistSharerRE</a> 
+     <Link className = "footer_heading" to = "/">PlaylistSharerRE</Link> 
         
-      <ul className="footer_links"> 
+      <ul className="footer_links" style = {{ display : (socials === null ? "flex" : socials) }}> 
         <li><a href = "#">Index</a></li> 
         <li><a href="#description">Description</a></li> 
         <li><a href="#contactme">Contact Me</a></li> 
@@ -25,6 +27,10 @@ const Footer = () => {
     
     </section>
   )
+} 
+ 
+Footer.defaultProps = { 
+  socials : null,
 }
 
 export default Footer

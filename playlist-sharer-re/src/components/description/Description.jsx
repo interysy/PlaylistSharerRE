@@ -1,16 +1,33 @@
 import React from 'react' 
-import './description.css'
+import './description.css' 
+import Animation from '../../components/animation/Animation'  
+import CombinedLogos from '../../assets/logos/combined_logos_2.png'
 
 const Description = () => {
   return (
-    <section id="description"> 
+    <section id="description" className = "section"> 
     <div className="description_heading"> 
       <h4>Get To Know</h4> 
       <h1>Description</h1> 
     </div>  
     <div className = "description_content"> 
-      <img className = "animate left"></img> 
-      <p className = "animate right">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, at aperiam, praesentium voluptatum totam, et sequi tenetur sed dignissimos corporis asperiores qui? Quas eius eum iure, sapiente odio, veritatis suscipit corporis laudantium voluptatum dolorum asperiores perspiciatis cupiditate, voluptates autem molestiae minima possimus perferendis. Nostrum quo exercitationem voluptates rerum voluptatem praesentium quisquam, libero facere quas cum voluptatibus ut placeat aliquid, veniam excepturi at consequuntur consequatur odio itaque! Blanditiis, nostrum! Nulla architecto placeat quasi eos? Aut minus perferendis et eius officia quisquam nostrum porro molestias harum soluta, quos, rerum neque, delectus ipsa quaerat nesciunt mollitia eveniet qui error adipisci dolores doloremque. Minus maxime quam magni animi ducimus et exercitationem, nostrum recusandae a! Iure eum voluptatem, placeat aperiam ex voluptas cumque repellat consequatur ipsam pariatur nemo consequuntur eligendi ullam similique explicabo at, omnis asperiores, est possimus ut sed fuga. Nisi iusto nesciunt voluptates doloremque, accusamus architecto pariatur est officia perspiciatis esse temporibus sunt?</p>  
+      <div className="images left animate">  
+        <img class = "img" src = {CombinedLogos} alt = "Combined Logos"></img>  
+      </div> 
+      <div className="animate right">  
+      <h3> This React project has been made in order to make it easy to transfer playlists from your Spotify to Youtube , I hope it will be of use! Currently Spotify to Youtube is supported and I am soon to be finishing up the transfer in the other direction</h3>  
+      <div className="align_left">
+        <h4> Follow the steps below to get sharing ... </h4> 
+        <ol>  
+          <li> Firstly log into your Spotify and Youtube accounts !</li> 
+          <li> Once done, click on the 'Start Sharing' button.</li> 
+          <li> On the left you will see a set of your Spotify playlists, select all to transfer to Youtube.</li> 
+          <li> On the right you will see a set of your Youtube playlists, select all that you want on your Spotify account.</li> 
+          <li> Click the "Transfer Selected Button" and await the results :)</li> 
+        </ol>  
+        <h4>*Feel free to close the app after, the accounts will log out themselves once browser session is closed.</h4>
+      </div>
+      </div>
     </div>
     </section>
   )

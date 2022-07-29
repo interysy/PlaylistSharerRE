@@ -1,7 +1,6 @@
 #contactme {
     height: fit-content;
     text-align: center;
-    margin-bottom: 15%;
 }
 
 .contactme_heading {
@@ -10,15 +9,16 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 30% 60%;
+    grid-template-columns: 45% 45%;
     gap: 10%;
-    margin: 0 10%;
 }
 
 .contactme_alt_contact {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2rem;
+    margin: 0 5rem;
 }
 
 .contact_option {
@@ -27,8 +27,20 @@
     gap: 0.6rem;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
-    border: 1px solid red;
+    padding: 0.6rem;
+    border: 2px solid;
+    background-color: var(--color-bg-variant);
+    border-radius: 3rem;
+    transition: var(--transition);
+}
+
+.contact_option:hover {
+    background-color: var(--color-extra);
+    border: 2px solid var(--color-bg-variant);
+}
+
+.contact_option a {
+    color: var(--color-btns);
 }
 
 .contactme_form form {
@@ -37,6 +49,7 @@
     gap: 0.6rem;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
 .contact_icon {
@@ -48,4 +61,18 @@ textarea {
     width: 100%;
     padding: 0.6rem;
     border-radius: 2%;
+}
+
+@media screen and (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 5%;
+    }
+    .contact_option {
+        padding: 0.2rem;
+        width: 80%;
+    }
+    .contactme_alt_contact {
+        align-items: center;
+    }
 }

@@ -1,13 +1,13 @@
 #description {
     text-align: center;
     height: fit-content;
-    margin-bottom: 15%;
 }
 
 .description_content {
     display: grid;
-    grid-template-columns: 40% 35%;
-    grid-gap: 15%;
+    grid-template-columns: 45% 45%;
+    grid-gap: 10%;
+    padding: 2rem;
 }
 
 .description_content p {
@@ -16,4 +16,54 @@
 
 .description_heading {
     margin-bottom: 5%;
+}
+
+.img {
+    max-width: 650px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.right {
+    padding: 2.5rem;
+    background-color: var(--color-bg-variant);
+    border-radius: 3rem;
+    transition: var(--transition);
+    border: 2px solid;
+}
+
+.right:hover {
+    background-color: var(--color-extra);
+    border: 2px solid var(--color-bg-variant);
+}
+
+.right h4 {
+    margin: 0.2rem;
+}
+
+.right>* {
+    margin: 0.5rem;
+}
+
+.align_left {
+    text-align: left;
+}
+
+.align_left>ol {
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.align_left>ol>li {
+    line-height: 1.1rem;
+    margin: 0.5rem 0;
+}
+
+@media screen and (max-width: 1024px) {
+    .description_content {
+        grid-template-columns: 1fr;
+        gap: 5%;
+        padding: 1rem;
+    }
 }
