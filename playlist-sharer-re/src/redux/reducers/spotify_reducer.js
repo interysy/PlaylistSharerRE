@@ -1,4 +1,5 @@
 const default_state = {
+    authorisationState: 0,
     loggedIn: false,
     token: '',
     loaded: false,
@@ -8,6 +9,8 @@ const default_state = {
 
 const spotify_reducer = (state = default_state, action) => {
     switch (action.type) {
+        case 'UPDATE_AUTHORISATION_STATE':
+            return {...state, authorisationState: action.payload.authorisationState }
         case 'LOG_IN_SPOTIFY':
             return {...state, token: action.payload.token, loggedIn: action.payload.loggedIn }
         case 'LOG_OUT_SPOTIFY':

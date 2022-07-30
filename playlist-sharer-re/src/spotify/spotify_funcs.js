@@ -1,6 +1,30 @@
-let baseSpotifyAPI = "https://api.spotify.com/v1";
+const baseSpotifyAPI = "https://api.spotify.com/v1";
 
+const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
+const REDIRECT_URI = `http://localhost:3000/gettoken`;
 
+const clientId = 'aa7e8d29948e4e2fb53937b11adb69ed'
+
+export function getAuthorisationPageLinkImplicitGrant() {
+    let state = generateRandomString(16);
+    return [AUTHORIZELINK + new URLSearchParams({
+        response_type: "token",
+        client_id: clientId,
+        state: state,
+        scope: "playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private",
+        redirect_uri: REDIRECT_URI,
+        show_dialog: true,
+    }), state];
+}
+
+export function generateRandomString(length) {
+    let result = '';
+    let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < length; i++) {
+        result += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+    }
+    return result;
+}
 // export function getTracksFromPlaylists(token, playlists) {
 
 //     return Promise.all([

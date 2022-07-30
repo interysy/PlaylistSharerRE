@@ -18,6 +18,10 @@
      width: 200px;
  }
  
+ .playlist>ul {
+     list-style: none;
+ }
+ 
  .playlist>* {
      overflow: auto;
      margin: 0.4rem;

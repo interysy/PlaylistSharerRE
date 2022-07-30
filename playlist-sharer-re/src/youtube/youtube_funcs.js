@@ -31,9 +31,12 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, fail
         let name = currentTrack.track.name
 
         searchForTrack(token, apiKey, artist, name).then((response) => {
-            console.log(response)
-            let videoId = response[0].items[0].id.videoId;
-            return videoId
+            if (response[0].error) {
+                throw response[0].error.message
+            } else {
+                let videoId = response[0].items[0].id.videoId;
+                return videoId
+            }
         }).then((videoId) => {
             setTimeout(() => {
                 insertIntoPlaylist(token, apiKey, playlistId, videoId).then((response) => {
@@ -44,6 +47,8 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, fail
                     insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, failed);
                 })
             }, 500);
+        }).catch((error) => {
+            return error
         })
 
     } else {
@@ -86,6 +91,7 @@ export function insertIntoPlaylistInner(url, data, token, playlist, video, resol
     }).then((responseAsJson) => {
         resolve(responseAsJson)
     }).catch((error) => {
+        console.log(error)
         reject(error);
     })
 
@@ -203,6 +209,8 @@ export function createPlaylistYoutube(token, apiKey, title) {
         return response.json()
     }).then((responseAsJson) => {
         return responseAsJson.id;
+    }).catch((error) => {
+        console.log(error);
     })
 
 }
@@ -234,6 +242,7 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
         }).then((data) => {
             getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, spotifyToken);
         }).catch((error) => {
+            console.log(error);
             reject(error)
         })
 
@@ -300,12 +309,16 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
 // }
 
 export function handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed) {
-    console.log("Recursive call");
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         let playlistId = currentPlaylist.newId;
         let tracks = currentPlaylist.tracks[0];
-        failed.concat(insertTracksIntoPlaylist(tracks, playlistId, youtubeToken, youtubeApiKey, []));
+        let result = insertTracksIntoPlaylist(tracks, playlistId, youtubeToken, youtubeApiKey, []);
+        if (typeof result === typeof []) {
+            return result;
+        } else {
+            failed.concat(result);
+        }
         handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed);
     } else {
         console.log(failed)

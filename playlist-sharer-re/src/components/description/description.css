@@ -60,7 +60,7 @@
     margin: 0.5rem 0;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1400px) {
     .description_content {
         grid-template-columns: 1fr;
         gap: 5%;

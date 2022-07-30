@@ -22,6 +22,21 @@ function getAuthorisationPageLink() {
 
 }
 
+function getAuthorisationPageLinkImplicitGrant() {
+    let state = generateRandomString(16);
+    console.log(REDIRECT_URI);
+    return [AUTHORIZELINK + new URLSearchParams({
+        response_type: "token",
+        client_id: getClientId(),
+        state: state,
+        scope: "playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private",
+        redirect_uri: REDIRECT_URI,
+        show_dialog: true,
+    }), state];
+
+}
+
+
 function getClientId() {
     return process.env.SPOTIFY_CLIENT_ID;
 }
@@ -60,4 +75,5 @@ function generateRandomString(length) {
 module.exports = {
     getAuthorisationPageLink,
     getTokenAuthenticationData,
+    getAuthorisationPageLinkImplicitGrant,
 }

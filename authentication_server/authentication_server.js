@@ -4,7 +4,7 @@ const cors = require('cors');
 const url = require('url')
 const https = require('https');
 const { google } = require('googleapis');
-const { getAuthorisationPageLink, getTokenAuthenticationData } = require("./spotify_handler");
+const { getAuthorisationPageLink, getAuthorisationPageLinkImplicitGrant, getTokenAuthenticationData } = require("./spotify_handler");
 const { getYoutubeAuthenticationLink, getAndSetToken } = require("./youtube_handler");
 
 var REDIRECT_TO_REACT = 'http://localhost:3000/gettoken'
@@ -16,10 +16,16 @@ app.use(cors())
 var current_state = null;
 
 app.get('/loginspotify', function(req, res) {
-    [link, state] = getAuthorisationPageLink();
+    [link, state] = getAuthorisationPageLinkImplicitGrant();
     current_state = state;
     res.redirect(link);
 })
+
+// app.get('/loginspotifyimplicit', function(req, res) {
+//     [link, state] = getAuthorisationPageLinkImplicitGrant();
+//     current_state = state;
+//     res.redirect(link);
+// })
 
 app.get('/logingoogle', function(req, res) {
     let link = getYoutubeAuthenticationLink();
@@ -39,25 +45,27 @@ app.get('/logingoogle', function(req, res) {
 // })
 
 app.get('/authenticatespotify', function(req, res) {
-    let code = req.query.code || null;
-    let state = req.query.state || null;
+    console.log(window.location.hash);
+    // console.log(req);
+    // let code = req.query.code || null;
+    // let state = req.query.state || null;
 
-    if (state === current_state) {
-        let authentication_data = getTokenAuthenticationData(code);
+    // if (state === current_state) {
+    //     let authentication_data = getTokenAuthenticationData(code);
 
 
-        request.post(authentication_data, function(error, response, body) {
-            var access_token = body.access_token
-            if (access_token) {
-                res.redirect(REDIRECT_TO_REACT + '?success=' + true + "&type=spotify" + '&access_token=' + access_token);
-            } else {
-                res.redirect(REDIRECT_TO_REACT + '?success=' + false + "&type=spotify");
-            }
-        })
-    } else {
-        res.redirect(REDIRECT_TO_REACT + '?success=' + false + '&error=' + (req.query.error || null) + "&type=spotify");
+    //     request.post(authentication_data, function(error, response, body) {
+    //         var access_token = body.access_token
+    //         if (access_token) {
+    //             res.redirect(REDIRECT_TO_REACT + '?success=' + true + "&type=spotify" + '&access_token=' + access_token);
+    //         } else {
+    //             res.redirect(REDIRECT_TO_REACT + '?success=' + false + "&type=spotify");
+    //         }
+    //     })
+    // } else {
+    //     res.redirect(REDIRECT_TO_REACT + '?success=' + false + '&error=' + (req.query.error || null) + "&type=spotify");
 
-    }
+    // }
 
 })
 

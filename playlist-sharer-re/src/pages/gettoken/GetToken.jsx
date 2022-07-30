@@ -12,18 +12,27 @@ import Button from '../../components/buttons/Button'
 class GetToken extends React.Component {
      
     componentDidMount() {    
-        let received = new URLSearchParams(window.location.search); 
-        let success = received.get('success'); 
-        let type = received.get('type');  
-        if (success) {  
-            let token = received.get('access_token');  
-            if (type === 'spotify') {  
-                this.props.loginSpotify(token , true);
-            } else if (type === 'youtube') {  
-                let api_key = received.get('api_key'); 
+        let receivedAsParams = new URLSearchParams(window.location.search);     
+        let receivedAsHash = window.location.hash; 
+         
+        if (receivedAsHash.length === 0) { 
+            let success = receivedAsParams.get('success');  
+            if (success) {  
+                let token = receivedAsParams.get('access_token');  
+                let api_key = receivedAsParams.get('api_key'); 
                 this.props.loginYoutube(token, api_key , true);
             }
-        }
+
+        } else {  
+            receivedAsHash = receivedAsHash.replace("#",""); 
+            receivedAsHash = receivedAsHash.split("&");   
+            let token = receivedAsHash[0].split('=')[1];  
+            let state = receivedAsHash[3].split('=')[1];
+            if (state === this.props.authorisationStateSpotify) { 
+                this.props.loginSpotify(token , true);
+            }
+
+        } 
     } 
      
     render() { 
@@ -40,9 +49,10 @@ class GetToken extends React.Component {
 } 
  
 const mapStateToProps = (state) => {  
-    return { 
+    return {  
+        authorisationStateSpotify: state.spotify_reducer.authorisationState,
         tokenSpotify : state.spotify_reducer.token, 
-        tokenYoutube : state.youtube_reducer.token 
+        tokenYoutube : state.youtube_reducer.token,
 
     }
 

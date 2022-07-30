@@ -1,14 +1,20 @@
 import React from 'react'  
 import {useDispatch, useSelector} from 'react-redux' 
-import {logoutSpotifyAction} from '../../redux/actions/spotify_actions'; 
+import {logoutSpotifyAction , updateAuthorisationStateAction} from '../../redux/actions/spotify_actions'; 
 import {logoutYoutubeAction} from '../../redux/actions/youtube_actions'; 
 import './login_to_services.css' 
 import Button from '../buttons/Button' 
 
- 
- 
-let showSpotifyForm = () => {
-    window.location.replace('http://localhost:3001/loginspotify');
+import { getAuthorisationPageLinkImplicitGrant } from '../../spotify/spotify_funcs'  
+  
+
+let showSpotifyForm = (dispatch) => {
+    //window.location.replace('http://localhost:3001/loginspotify'); 
+    let result = getAuthorisationPageLinkImplicitGrant();  
+    let link = result[0];  
+    let state = result[1]; 
+    dispatch(updateAuthorisationStateAction(state));
+    window.location.replace(link);
   } 
   
 let showYoutubeForm = () => { 
@@ -18,7 +24,8 @@ let showYoutubeForm = () => {
 
   
 const Login = () => {  
-  let loggedInSpotify = useSelector((state) => state.spotify_reducer.loggedIn); 
+  let loggedInSpotify = useSelector((state) => state.spotify_reducer.loggedIn);  
+  let authorisationStateSpotify = useSelector( (state) => state.spotify_reducer.authorisationState);
   let loggedInYoutube = useSelector((state) => state.youtube_reducer.loggedIn);
   const dispatch = useDispatch(); 
 
@@ -32,7 +39,7 @@ const Login = () => {
               <span className = "dot" style = {{ backgroundColor : (loggedInSpotify) ? "#17b890" : "#a85751"}}></span> 
             </div> 
           </div> 
-          <Button className = "btn" text = {(loggedInSpotify) ? "Log Out" : "Log In"} onClick={(loggedInSpotify) ? function() {dispatch(logoutSpotifyAction())} : showSpotifyForm} active = { (loggedInSpotify) } classes = "btn"/>
+          <Button className = "btn" text = {(loggedInSpotify) ? "Log Out" : "Log In"} onClick={(loggedInSpotify) ? function() {dispatch(logoutSpotifyAction())} : () => showSpotifyForm(dispatch)} active = { (loggedInSpotify) } classes = "btn"/>
         </div> 
         <div class = "music_service"> 
           <div className='first_row_of_service'>

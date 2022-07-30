@@ -4,10 +4,14 @@ import { getPlaylistsSpotifyFunc } from '../../spotify/spotify_funcs';
 export const LOG_IN_SPOTIFY = 'LOG_IN_SPOTIFY';
 export const LOG_OUT_SPOTIFY = 'LOG_OUT_SPOTIFY';
 export const GET_PLAYLISTS_SPOTIFY = 'GET_PLAYLISTS_SPOTIFY';
-export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY'
-export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST'
+export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY';
+export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST';
+export const UPDATE_AUTHORISATION_STATE = 'UPDATE_AUTHORISATION_STATE';
 
-
+export function updateAuthorisationStateAction(state) {
+    console.log(state);
+    return { type: UPDATE_AUTHORISATION_STATE, payload: { authorisationState: state } };
+}
 export function loginSpotifyAction(token, loggedIn) {
     return { type: LOG_IN_SPOTIFY, payload: { token: token, loggedIn: loggedIn } };
 }
