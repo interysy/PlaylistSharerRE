@@ -1,7 +1,8 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux'; 
-import { transferToYoutubeAction } from '../../redux/actions/youtube_actions'  
+import { transferToYoutubeAction } from '../../redux/actions/youtube_actions'   
+import { transferToSpotifyAction } from '../../redux/actions/spotify_actions'
 import Loader from '../../components/loader/Loader'
 
 class Results extends React.Component {
@@ -14,7 +15,7 @@ class Results extends React.Component {
      
     noPlaylistsToTransfer() { 
         return ( 
-            <h1>No Playlists To Transfer </h1>
+            <h1> No Playlists To Transfer </h1>
         )
     }
       
@@ -33,12 +34,16 @@ class Results extends React.Component {
             this.noPlaylistsToTransfer();
         } else {   
             this.transferPlaylistsToYoutube(); 
-            //this.transferPlaylistsToSpotify();    
+            this.transferPlaylistsToSpotify();    
         }
     }  
      
     transferPlaylistsToYoutube() { 
         this.props.transferToYoutube([...this.props.selectedPlaylistsSpotify],this.props.accessTokenSpotify , this.props.accessTokenYoutube , this.props.apiKeyYoutube);
+    } 
+     
+    transferPlaylistsToSpotify() { 
+        this.props.transferToSpotify([...this.props.selectedPlaylistsYoutube] , this.props.accessTokenSpotify ,  this.props.accessTokenYoutube , this.props.apiKeyYoutube);
     }
     
 
@@ -70,7 +75,8 @@ const mapStateToProps = (state) => {
  
 const mapDispatchToProps = (dispatch) => {   
   return {     
-    transferToYoutube : bindActionCreators(transferToYoutubeAction , dispatch),
+    transferToYoutube : bindActionCreators(transferToYoutubeAction , dispatch), 
+    transferToSpotify : bindActionCreators(transferToSpotifyAction , dispatch),
   }
 
 }

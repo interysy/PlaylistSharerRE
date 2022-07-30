@@ -1,3 +1,6 @@
+import { getTracksToTransferToPlaylistsYoutube } from '../youtube/youtube_funcs'
+
+
 const baseSpotifyAPI = "https://api.spotify.com/v1";
 
 const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
@@ -122,4 +125,80 @@ export function getTracksFromPlaylistSpotify(token, playlist) {
             getData(url, [], resolve, reject, token)
         }),
     ])
+}
+
+
+export function createPlaylistsSpotify(playlists, spotifyToken) {
+    let url = baseSpotifyAPI + '/me/playlists';
+    return Promise.all([
+        new Promise((resolve, reject) => {
+            createPlaylistsSpotifyInner(url, playlists, spotifyToken, [], reject, resolve);
+        }),
+    ])
+}
+
+export function createPlaylistSpotify(playlist, token, url) {
+    let description = "Shared from PlaylistSharerRE";
+    console.log("Creation ... ")
+
+    return Promise.all([
+        new Promise((resolve, reject) => {
+            let options = {
+                'method': 'POST',
+                'body': JSON.stringify({
+                    "name": playlist,
+                    "description": description,
+                    public: "false",
+                }),
+                'headers': {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                }
+            }
+
+            return fetch(url, options).then((response) => {
+                return response.json()
+            }).then((responseAsJson) => {
+                resolve(responseAsJson.id);
+            }).catch((error) => {
+                console.log(error);
+                reject(error);
+            })
+        }),
+    ])
+
+}
+
+export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve) {
+    console.log("Creating a singular playlist");
+    if (playlists.length > 0) {
+        let currentPlaylist = playlists.shift();
+        currentPlaylist = currentPlaylist.split("%");
+        console.log(currentPlaylist)
+        let currentPlaylistName = currentPlaylist[0];
+        let currentPLaylistId = currentPlaylist[1];
+        createPlaylistSpotify(currentPlaylistName, spotifyToken, url).then((response) => {
+            data.push({
+                name: currentPlaylistName,
+                oldId: currentPLaylistId,
+                newId: response[0],
+            });
+            return data;
+        }).then((data) => {
+            createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve);
+        })
+
+    } else {
+        console.log(data);
+        resolve(data);
+    }
+
+}
+
+
+export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
+    console.log("Transferring ....");
+    createPlaylistsSpotify(playlists, spotifyToken).then((createdPlaylists) => {
+        return createdPlaylists;
+    })
 }

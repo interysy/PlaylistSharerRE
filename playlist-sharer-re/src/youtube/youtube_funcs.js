@@ -347,3 +347,7 @@ export function transferToYoutube(playlists, spotifyToken, youtubeToken, youtube
 
 
 }
+
+export function getTracksToTransferToPlaylistsYoutube() {
+
+}

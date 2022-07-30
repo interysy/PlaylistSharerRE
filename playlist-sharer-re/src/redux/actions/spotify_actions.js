@@ -1,4 +1,4 @@
-import { getPlaylistsSpotifyFunc } from '../../spotify/spotify_funcs';
+import { getPlaylistsSpotifyFunc, transferToSpotify } from '../../spotify/spotify_funcs';
 
 
 export const LOG_IN_SPOTIFY = 'LOG_IN_SPOTIFY';
@@ -50,4 +50,16 @@ export function getPlaylistsSpotifyAction(token) {
 
 export function storePlaylistsToTransferSpotifyAction(playlists) {
     return { type: STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY, payload: { playlists: playlists } };
+}
+
+export function transferToSpotifyAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
+    console.log("HERE");
+    console.log(playlists);
+    return (dispatch) => {
+        transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey);
+        // dispatch({
+        //     type: UPDATE_FAILED_SONGS,
+        //     payload: { failedSongs: failed },
+        // })
+    }
 }
