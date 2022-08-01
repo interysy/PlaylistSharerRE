@@ -20,7 +20,7 @@ class Index extends React.Component {
         return ( 
             <div>    
                 <ToggleSwitch/>
-                <div class = "screen_view">
+                <div className = "screen_view">
                     <Header className = "header" />   
                     <div className = "login_area">
                         <LoginToServices />  

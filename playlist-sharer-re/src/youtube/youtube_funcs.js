@@ -1,7 +1,7 @@
 import { getTracksFromPlaylistSpotify } from '../spotify/spotify_funcs'
 
 
-
+// GETTING ALL PLAYLISTS
 export function getPlaylistsYoutubeFunc(token, apiKey) {
     let url = "https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&maxResults=25&mine=true&key=" + apiKey;
 
@@ -12,18 +12,22 @@ export function getPlaylistsYoutubeFunc(token, apiKey) {
     ]));
 }
 
-// export function getTracksFromPlaylistYoutube(token, api_key, playlist) {
-//     let url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails%2Cid%2Cstatus&maxResults=50&playlistId=' + playlist + '&key=' + api_key;
+
+// GETTING PLAYLIST TRACKS - USED IN SPOTIFY FUNCS
+export function getTracksFromPlaylistYoutube(token, api_key, playlist) {
+    let url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails%2Cid%2Cstatus&maxResults=50&playlistId=' + playlist + '&key=' + api_key;
+    console.log(playlist)
+    console.log("Getting tracks")
+    return (Promise.all([
+        new Promise((resolve, reject) => {
+            getData(url, [], resolve, reject, token);
+        }),
+    ]));
+
+}
 
 
-//     return (Promise.all([
-//         new Promise((resolve, reject) => {
-//             getData(url, [], resolve, reject, token);
-//         }),
-//     ]));
-
-// } 
-
+// INSERTION 
 export function insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, failed) {
     if (tracks.length > 0) {
         let currentTrack = tracks.shift();
@@ -97,6 +101,8 @@ export function insertIntoPlaylistInner(url, data, token, playlist, video, resol
 
 }
 
+
+// SEARCHING 
 function searchForTrack(token, apiKey, artist, title) {
     let url = 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + artist.replace(" ", "%") + '%-%' + title.replace(" ", "%") + '&key=' + apiKey;
     return (Promise.all([
@@ -126,6 +132,8 @@ export function searchForTrackInner(url, data, resolve, reject, token) {
 }
 
 
+
+
 export function getData(url, data, resolve, reject, token) {
     fetch(url, {
             headers: {
@@ -149,7 +157,7 @@ export function getData(url, data, resolve, reject, token) {
 
 
 
-
+// CREATING PLAYLISTS
 export function createPlaylistsYoutube(playlists, token, apiKey) {
 
     return (Promise.all([
@@ -219,7 +227,7 @@ export function createPlaylistYoutube(token, apiKey, title) {
 
 
 
-
+// GETTING TRACKS FROM SPOTIFY PER PLAYLIST
 export function getTracksToTransferToPlaylists(playlists, spotifyToken) {
     console.log("Working from youtube functions");
     return (Promise.all([
@@ -254,60 +262,8 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
 }
 
 
-// export function searchForTracksOnePlaylist(tracks, token, apiKey) {
 
-//     return (Promise.all([
-//         new Promise((resolve, reject) => {
-//             searchForTracksToTransferYoutubeInner(tracks, [], resolve, reject, token, apiKey);
-//         }),
-//     ]));
-// }
-
-// export function searchForTracksOnePlaylistInner(tracks, token, apiKey) {
-
-//     if (tracks.length > 0) {
-//         let currentTrack = tracks.shift();
-//         console.log(currentTrack)
-//     let currentPlaylistSpotifyId = currentPlaylist.oldId;
-
-//     getTracksFromPlaylistSpotify(spotifyToken, currentPlaylistSpotifyId).then((response) => {
-//         currentPlaylist.tracks = response
-//         data.push(currentPlaylist)
-//         getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, spotifyToken);
-//     }).catch((error) => {
-//         reject(error)
-//     })
-// } else {
-//     resolve(data);
-//     }
-
-// }
-
-// export function searchForTracksToTransferYoutube(playlists, token, apiKey) {
-//     console.log("Will be searching for tracks in playlists");
-//     console.log(playlists);
-
-//     return (Promise.all([
-//         new Promise((resolve, reject) => {
-//             searchForTracksToTransferYoutubeInner(playlists, [], resolve, reject, token, apiKey);
-//         }),
-//     ]));
-// }
-
-// export function searchForTracksToTransferYoutubeInner(playlists, data, resolve, reject, token, apiKey) {
-//     console.log("About to search")
-//     if (playlists.length > 0) {
-//         let currentPlaylist = playlists.shift();
-//         currentPlaylist = currentPlaylist[0];
-//         let currentPlaylistTracks = currentPlaylist.tracks;
-//         console.log(currentPlaylistTracks)
-
-//         searchForTracksOnePlaylist(currentPlaylistTracks, token, apiKey).then((response) => {
-//             console.log(response);
-//         })
-//     }
-// }
-
+// GENERAL PLAYLIST HANDLING 
 export function handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed) {
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();

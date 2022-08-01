@@ -31,7 +31,7 @@ const Login = () => {
   return ( 
     <div id = "login_to_services">  
       <div>  
-        <div class = "music_service"> 
+        <div className = "music_service"> 
           <div className = "first_row_of_service">
             <span> Spotify: </span>    
             <div className="div_that_contains_dot">
@@ -40,7 +40,7 @@ const Login = () => {
           </div> 
           <Button className = "btn" text = {(loggedInSpotify) ? "Log Out" : "Log In"} onClick={(loggedInSpotify) ? function() {dispatch(logoutSpotifyAction())} : () => showSpotifyForm(dispatch)} active = { (loggedInSpotify) } classes = "btn"/>
         </div> 
-        <div class = "music_service"> 
+        <div className = "music_service"> 
           <div className='first_row_of_service'>
             <span>Youtube: </span>  
             <div className="div_that_contains_dot">

@@ -20,7 +20,7 @@ class Results extends React.Component {
     }
       
     componentDidUpdate(prevProps , prevState) {  
-        if (this.props.completedTransferYoutube != prevProps.completedTransfer && prevState.done === false) { 
+        if (this.props.completedTransferYoutube !== prevProps.completedTransfer && prevState.done === false) { 
             this.setState({ 
                 done : true,
             })

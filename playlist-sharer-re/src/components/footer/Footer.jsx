@@ -4,7 +4,6 @@ import { VscGithub } from 'react-icons/vsc'
 import { Link } from 'react-router-dom'
 
 const Footer = ({socials}) => {  
-  console.log(socials);
   return (
     <section id="footer"> 
      

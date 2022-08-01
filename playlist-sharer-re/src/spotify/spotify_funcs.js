@@ -1,4 +1,4 @@
-import { getTracksToTransferToPlaylistsYoutube } from '../youtube/youtube_funcs'
+import { getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
 
 
 const baseSpotifyAPI = "https://api.spotify.com/v1";
@@ -197,9 +197,53 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
 }
 
 
+export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeApiKey) {
+    console.log("Working from youtube functions");
+    return (Promise.all([
+        new Promise((resolve, reject) => {
+            getTracksToTransferToPlaylistsInner(playlists, [], resolve, reject, youtubeToken, youtubeApiKey);
+        }),
+    ]));
+
+}
+
+
+export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey) {
+    if (playlists.length > 0) {
+        let currentPlaylist = playlists.shift();
+        currentPlaylist = currentPlaylist[0];
+        let currentPlaylistYoutubeId = currentPlaylist.oldId;
+        getTracksFromPlaylistYoutube(youtubeToken, youtubeApiKey, currentPlaylistYoutubeId).then((response) => {
+            currentPlaylist.tracks = response
+            data.push(currentPlaylist)
+            return data
+        }).then((data) => {
+            getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey);
+        }).catch((error) => {
+            console.log(error);
+            reject(error)
+        })
+
+    } else {
+        console.log(data);
+        resolve(data);
+    }
+
+}
+
+
+export function handlePlaylists(playlists, spotifyToken, failed) {
+    if (playlists.length > 0) {
+        let currentPlaylist = playlists.shift();
+        let currentPlaylistSpotifyId = currentPlaylist.newId;
+        let currentPlaylistTracksToAdd = currentPlaylist.tracks[0];
+    }
+}
+
 export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
-    console.log("Transferring ....");
     createPlaylistsSpotify(playlists, spotifyToken).then((createdPlaylists) => {
-        return createdPlaylists;
+        getTracksToTransferToPlaylists(createdPlaylists, youtubeToken, youtubeApiKey).then((playlistsWithTracks) => {
+            let failed = handlePlaylists(playlistsWithTracks, spotifyToken, []);
+        })
     })
 }

@@ -36,19 +36,10 @@ class TransferPlaylists extends React.Component {
         
     }  
      
-    removeFooterLinks() { 
-      document.getElementsByClassName("footer_links")[0].style.display = "none";
-    } 
-     
-    showFooterLinks() { 
-      document.getElementsByClassName("footer_links")[0].style.display = "flex";
-    } 
-
     searchForPlaylist(event) { 
       let target = event.target; 
       let type = target.getAttribute("class");  
       let searchingFor = target.value.toLowerCase(); 
-      console.log(searchingFor)
       type = type.split(" ")[1];  
        
       let divOfPlaylists = target.nextSibling; 
@@ -156,7 +147,6 @@ class TransferPlaylists extends React.Component {
         })}); 
       } else {
         this.getPlaylists();   
-        // this.removeFooterLinks();
       } 
       
     }
