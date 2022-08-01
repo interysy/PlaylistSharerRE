@@ -50,3 +50,22 @@
         border-radius: 2rem;
         background-color: var(--color-primary);
     }
+    
+    @media screen and (max-width: 1024px) {
+        #playlists {
+            justify-content: center;
+            flex-direction: column;
+            column-gap: 1rem;
+            align-items: center;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        .options>h1 {
+            margin: 3rem 1rem 5rem 1rem;
+        }
+        .service_playlists {
+            height: 60vh;
+        }
+    }

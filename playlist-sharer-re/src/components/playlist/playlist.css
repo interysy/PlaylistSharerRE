@@ -33,10 +33,18 @@
  
  .selected_playlist {
      position: relative;
-     /* right: 0; */
-     /* top: 50%; */
  }
  
  .selected_playlist input {
      width: 25px;
+ }
+ 
+ @media screen and (max-width: 1024px) {
+     .playlist_with_check {
+         grid-template-columns: 1fr;
+         padding: 3rem;
+     }
+     .selected_playlist input {
+         transform: scale(2);
+     }
  }
