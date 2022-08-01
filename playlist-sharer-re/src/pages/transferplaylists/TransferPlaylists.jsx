@@ -86,7 +86,7 @@ class TransferPlaylists extends React.Component {
               <img class = "header_img" src = {SpotifyLogo} alt = "Spotify Logo" ></img> 
               <input type="text" className = "search_bar spotify_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
               <div className="service_playlists">
-                {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify" idx = {idx} />))}  
+                {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify"/>))}  
               </div>
             </div>  
             <Button text = "Refresh Playlists" onClick = {this.refreshPlaylists} classes = "btn refresh_btn" ></Button> 
@@ -94,7 +94,7 @@ class TransferPlaylists extends React.Component {
             <img class = "header_img" src = {YoutubeLogo} alt = "Youtube Logo"></img>  
               <input type="text" className = "search_bar youtube_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
               <div className="service_playlists">
-                {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube" idx = {idx}/>))}  
+                {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube"/>))}  
               </div>
             </div>            
            </div>   

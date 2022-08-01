@@ -5,7 +5,7 @@ import DefaultPlaylistImage from '../../assets/defaults/no_image_default.jpg'
  
 
 
-const Playlist = ({name , id , image , description , owner , onChange , type , idx}) => {   
+const Playlist = ({name , id , image , description , owner , onChange , type}) => {   
   if (image === null) {  
     image = DefaultPlaylistImage;
   }   
