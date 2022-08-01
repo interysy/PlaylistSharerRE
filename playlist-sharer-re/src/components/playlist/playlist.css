@@ -28,7 +28,7 @@
  }
  
  .image {
-     max-width: 150px;
+     max-width: 100px;
  }
  
  .selected_playlist {
@@ -46,5 +46,8 @@
      }
      .selected_playlist input {
          transform: scale(2);
+     }
+     .image {
+         max-width: 150px;
      }
  }
