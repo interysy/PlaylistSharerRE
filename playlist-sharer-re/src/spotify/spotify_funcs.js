@@ -107,6 +107,7 @@ export function getData(url, data, resolve, reject, token) {
             if (response.next !== null) {
                 getData(response.next, retrievedData, resolve, reject, token)
             } else {
+                console.log(retrievedData)
                 resolve(retrievedData)
             }
         }).catch(error => {

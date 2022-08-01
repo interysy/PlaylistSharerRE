@@ -63,7 +63,7 @@
 @media screen and (max-width: 1400px) {
     .description_content {
         grid-template-columns: 1fr;
-        gap: 5%;
+        gap: 5rem;
         padding: 1rem;
     }
 }

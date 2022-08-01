@@ -63,16 +63,17 @@ textarea {
     border-radius: 2%;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1080px) {
     .grid {
         grid-template-columns: 1fr;
-        gap: 5%;
     }
-    .contact_option {
-        padding: 0.2rem;
-        width: 80%;
-    }
+    .contact_option {}
     .contactme_alt_contact {
-        align-items: center;
+        margin: 0.2rem;
     }
+}
+
+@media screen and (max-width: 600px) {
+    .contact_option {}
+    .contactme_alt_contact {}
 }

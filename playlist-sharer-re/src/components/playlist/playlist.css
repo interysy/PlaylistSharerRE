@@ -9,6 +9,7 @@
  }
  
  .playlist {
+     position: relative;
      padding: 0.4rem;
      display: flex;
      justify-content: center;
@@ -16,6 +17,10 @@
      flex-direction: column;
      min-height: fit-content;
      width: 200px;
+ }
+ 
+ .playlist:hover .tooltip {
+     visibility: visible;
  }
  
  .playlist>ul {
@@ -26,6 +31,21 @@
  .playlist>* {
      overflow: auto;
      margin: 0.4rem;
+ }
+ 
+ .tooltip {
+     visibility: hidden;
+     width: 200px;
+     height: fit-content;
+     background-color: var(--color-white);
+     color: var(--color-black);
+     text-align: center;
+     padding: 0.75rem;
+     position: absolute;
+     right: 50%;
+     transform: translateX(50%);
+     z-index: 1;
+     border-radius: 2rem;
  }
  
  .image {

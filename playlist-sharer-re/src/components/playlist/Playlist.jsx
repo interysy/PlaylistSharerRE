@@ -1,16 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types' 
-import './playlist.css'
+import './playlist.css' 
+import DefaultPlaylistImage from '../../assets/defaults/no_image_default.jpg'
  
 
-// idx % name % type % id
-const Playlist = ({name , id , image , description , owner , onChange , type , idx}) => { 
+
+const Playlist = ({name , id , image , description , owner , onChange , type , idx}) => {   
+  if (image === null) {  
+    image = DefaultPlaylistImage;
+  }   
+   
+  if (!description) { 
+    description = "No description"
+  }
+
   return (
     <div className = "playlist_with_check">  
         <label class="selected_playlist">
           <input type="checkbox" id = {name + "%" + type + "%" + id} onChange = {onChange}></input>
         </label> 
-        <div className = "playlist">
+        <div className = "playlist">  
+          <span className = "tooltip" > {description} </span> 
           <img src={image} className = "image"/>
           <ul>  
               <li>{name}</li>
@@ -20,7 +30,9 @@ const Playlist = ({name , id , image , description , owner , onChange , type , i
           </div>
     </div>
   )
-}
+} 
+ 
+
 
 Playlist.propTypes = { 
     name : PropTypes.string.isRequired, 
