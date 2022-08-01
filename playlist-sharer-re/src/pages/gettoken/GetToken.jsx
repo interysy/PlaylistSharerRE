@@ -10,7 +10,13 @@ import Button from '../../components/buttons/Button'
 
 
 class GetToken extends React.Component {
-     
+      
+    constructor() {  
+        super();
+        this.timeoutId = 0;  
+        this.cancelTimeout = this.cancelTimeout.bind(this);
+    } 
+
     componentDidMount() {    
         let receivedAsParams = new URLSearchParams(window.location.search);     
         let receivedAsHash = window.location.hash; 
@@ -32,14 +38,25 @@ class GetToken extends React.Component {
                 this.props.loginSpotify(token , true);
             }
 
-        } 
+        }   
+        var time = 5000; 
+        this.timeoutId = setTimeout(() => { 
+            window.location.replace("http://localhost:3000/");
+        },time)
+          
+
     } 
-     
+      
+    cancelTimeout() {  
+        console.log("Clearing timeout");
+        clearTimeout(this.timeoutId);
+    }
     render() { 
         return (
             <div id="get_token">   
                 <h1>PlaylistSharerRe</h1>
-                <Link to = "/"> <Button text = "Click Here To Return" classes = "btn"/></Link>  
+                <Link to = "/"> <Button text = "Click Here To Return" classes = "btn" onClick = {this.cancelTimeout} /></Link>   
+                <p className = "redirect_p" > You will be redirected soon, if not click the button above.</p>
                 <div className = "stick_to_bottom"> 
                     <Footer socials = "none"/> 
                 </div>

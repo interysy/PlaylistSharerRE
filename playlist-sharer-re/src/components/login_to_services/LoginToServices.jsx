@@ -9,7 +9,6 @@ import { getAuthorisationPageLinkImplicitGrant } from '../../spotify/spotify_fun
   
 
 let showSpotifyForm = (dispatch) => {
-    //window.location.replace('http://localhost:3001/loginspotify'); 
     let result = getAuthorisationPageLinkImplicitGrant();  
     let link = result[0];  
     let state = result[1]; 

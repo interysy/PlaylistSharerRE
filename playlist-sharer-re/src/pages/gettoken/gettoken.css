@@ -18,3 +18,8 @@
     bottom: 0;
     width: 100%;
 }
+
+.redirect_p {
+    margin: 2%;
+    color: var(--color-primary)
+}

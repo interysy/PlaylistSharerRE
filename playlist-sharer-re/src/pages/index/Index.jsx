@@ -11,6 +11,7 @@ import Footer from '../../components/footer/Footer'
 import ToggleSwitch from '../../components/toggle_switch/ToggleSwitch';
  
 import './index.css'
+ 
 
 class Index extends React.Component {
      
