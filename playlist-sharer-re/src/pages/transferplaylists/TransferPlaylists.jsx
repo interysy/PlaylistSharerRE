@@ -78,7 +78,7 @@ class TransferPlaylists extends React.Component {
         <div id = "transfer_playlists">    
           <div class ='options'>
             <Link to = "/"> <Button text = "Return To Home Page" classes = "btn"/> </Link>   
-            <h1>Please select playlists to transfer to another platform</h1> 
+            <h2>Please select playlists to transfer to another platform</h2> 
             <Link to = "/results"> <Button onClick = {this.setStateBeforeRedirect} text = "Transfer Selected" classes = "btn"/> </Link>  
           </div>
           <div id = "playlists"> 
