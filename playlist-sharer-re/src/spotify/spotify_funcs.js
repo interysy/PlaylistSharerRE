@@ -28,57 +28,32 @@ export function generateRandomString(length) {
     }
     return result;
 }
-// export function getTracksFromPlaylists(token, playlists) {
 
-//     return Promise.all([
-//         new Promise((resolve, reject) => {
-//             getTracksFromPlaylistInner(token, playlists, resolve, reject);
-//         }),
-//     ])
+export function searchForTracksSpotify(token, name, artist) {
+    let url = (artist === null) ? 'https://api.spotify.com/v1/search?q=track:' + name + '&type=track&limit=1' : 'https://api.spotify.com/v1/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
 
-// }
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            headers: {
+                "Accept": "application/json",
+                'Authorization': 'Bearer ' + token,
+                "Content-Type": "application/json",
+                // "Access-Control-Allow-Origin": "http://localhost:3000/",
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((responseAsJson) => {
+            if (responseAsJson.tracks.items.length === 0) {
+                resolve("");
+            } else {
+                resolve(responseAsJson.tracks.items[0].id);
+            }
+        }).catch((error) => {
+            resolve(error);
+        })
+    });
 
-// export function getTracksFromPlaylistsInner(token, playlists, resolve, reject) {
-//     if (playlists.length > 0) {
-//         let currentPlaylist = playlists.shift();
-//         let currentPlaylistSplit = currentPlaylist.split("%");
-//         let currentPlaylistName = currentPlaylistSplit[0];
-//         let currentPlaylistId = currentPlaylistSplit[1];
-
-//         getTracksFromPlaylist(token, currentPlaylistId).then((response) => {
-//             data.push({
-//                 tracks: response,
-//                 newId: response,
-//                 oldId: currentPlaylistId
-//             });
-//             getTracksFromPlaylists(token, playlists);
-//         })
-//     } else {
-//         return data
-//     } 
-// } 
-
-// export function searchForTracksSpotify(token, name, artist) {
-//     let url = (artist === null) ? 'https://api.spotify.com/v1/search?q=track:' + name + '&type=track&limit=1' : 'https://api.spotify.com/v1/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
-
-//     return Promise.all([
-//         new Promise((resolve, reject) => {
-//             fetch(url, {
-//                 headers: {
-//                     "Accept": "application/json",
-//                     'Authorization': 'Bearer ' + token,
-//                     "Content-Type": "application/json",
-//                     "Access-Control-Allow-Origin": "http://localhost:3000/*",
-
-//                 }
-//             }).then((response) => {
-//                 return response.json();
-//             }).then((responseAsJson) => {
-//                 return responseAsJson.tracks[0]
-//             })
-//         }),
-//     ]);
-// }
+}
 
 export function getPlaylistsSpotifyFunc(token) {
 
@@ -107,7 +82,6 @@ export function getData(url, data, resolve, reject, token) {
             if (response.next !== null) {
                 getData(response.next, retrievedData, resolve, reject, token)
             } else {
-                console.log(retrievedData)
                 resolve(retrievedData)
             }
         }).catch(error => {
@@ -118,8 +92,7 @@ export function getData(url, data, resolve, reject, token) {
 
 
 export function getTracksFromPlaylistSpotify(token, playlist) {
-    var url = "https://api.spotify.com/v1/playlists/" + playlist + "/tracks?limit=50";
-    console.log("Getting Tracks from " + playlist)
+    var url = baseSpotifyAPI + "/playlists/" + playlist + "/tracks?limit=50";
 
     return Promise.all([
         new Promise((resolve, reject) => {
@@ -140,7 +113,6 @@ export function createPlaylistsSpotify(playlists, spotifyToken) {
 
 export function createPlaylistSpotify(playlist, token, url) {
     let description = "Shared from PlaylistSharerRE";
-    console.log("Creation ... ")
 
     return Promise.all([
         new Promise((resolve, reject) => {
@@ -171,11 +143,9 @@ export function createPlaylistSpotify(playlist, token, url) {
 }
 
 export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve) {
-    console.log("Creating a singular playlist");
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         currentPlaylist = currentPlaylist.split("%");
-        console.log(currentPlaylist)
         let currentPlaylistName = currentPlaylist[0];
         let currentPLaylistId = currentPlaylist[1];
         createPlaylistSpotify(currentPlaylistName, spotifyToken, url).then((response) => {
@@ -190,7 +160,6 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
         })
 
     } else {
-        console.log(data);
         resolve(data);
     }
 
@@ -198,7 +167,6 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
 
 
 export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeApiKey) {
-    console.log("Working from youtube functions");
     return (Promise.all([
         new Promise((resolve, reject) => {
             getTracksToTransferToPlaylistsInner(playlists, [], resolve, reject, youtubeToken, youtubeApiKey);
@@ -225,18 +193,78 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
         })
 
     } else {
-        console.log(data);
         resolve(data);
     }
 
 }
 
 
+export function insertTracksIntoPlaylist(tracks, playlistId, token, data) {
+    if (tracks.length > 0) {
+        let currentTrack = tracks.shift();
+        let title = currentTrack.snippet.title.replace(/\([^()]*\)/g, '').trim().split("-");
+        let artist = null;
+        let name = null;
+        console.log(title);
+        if (title.length > 1) {
+            artist = title[0];
+            name = title[1];
+        } else {
+            name = title[0];
+        }
+
+        searchForTracksSpotify(token, name, artist).then((songId) => {
+            console.log(songId);
+            data.push(songId);
+        }).then(() => {
+            insertTracksIntoPlaylist(tracks, playlistId, token, data);
+        });
+
+    } else {
+        console.log(data);
+        insertIntoPlaylist(playlistId, token, data);
+        return;
+    }
+}
+
+function insertIntoPlaylist(playlistId, token, data) {
+    console.log("Inserting");
+
+    let url = baseSpotifyAPI + "/users/me/playlists/" + playlistId + "/tracks";
+    data = data.filter(element => (typeof element === typeof "" && element != ""));
+    for (var i = 0; i < data.length; i++) {
+        data[i] = "spotify:track:" + data[i];
+    }
+
+    let options = {
+        'method': 'POST',
+        'body': JSON.stringify({
+            "uris": [
+                ...data
+            ],
+        }),
+        'headers': {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+        }
+    }
+
+    fetch(url, options).then((response) => {
+        console.log(response);
+    })
+}
+
+
 export function handlePlaylists(playlists, spotifyToken, failed) {
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
+        currentPlaylist = currentPlaylist[0]
         let currentPlaylistSpotifyId = currentPlaylist.newId;
         let currentPlaylistTracksToAdd = currentPlaylist.tracks[0];
+        insertTracksIntoPlaylist(currentPlaylistTracksToAdd, currentPlaylistSpotifyId, spotifyToken, []).then(() => {
+            handlePlaylists(playlists, spotifyToken, failed);
+        });
     }
 }
 
