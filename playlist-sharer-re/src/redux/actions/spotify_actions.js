@@ -1,15 +1,14 @@
-import { getPlaylistsSpotifyFunc, transferToSpotify } from '../../spotify/spotify_funcs';
+import { getPlaylistsSpotify, transferToSpotify } from '../../spotify/spotify_funcs';
 
 
 export const LOG_IN_SPOTIFY = 'LOG_IN_SPOTIFY';
 export const LOG_OUT_SPOTIFY = 'LOG_OUT_SPOTIFY';
 export const GET_PLAYLISTS_SPOTIFY = 'GET_PLAYLISTS_SPOTIFY';
 export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY';
-export const GET_TRACKS_PER_PLAYLIST = 'GET_TRACKS_PER_PLAYLIST';
 export const UPDATE_AUTHORISATION_STATE = 'UPDATE_AUTHORISATION_STATE';
+export const RAISE_ERROR = 'RAISE_ERROR';
 
 export function updateAuthorisationStateAction(state) {
-    console.log(state);
     return { type: UPDATE_AUTHORISATION_STATE, payload: { authorisationState: state } };
 }
 export function loginSpotifyAction(token, loggedIn) {
@@ -22,7 +21,7 @@ export function logoutSpotifyAction() {
 
 export function getPlaylistsSpotifyAction(token) {
     return (dispatch) => {
-        getPlaylistsSpotifyFunc(token).then((response) => {
+        getPlaylistsSpotify(token).then((response) => {
             let result = [];
             response[0].forEach((playlist_element) => {
                 let image = null
@@ -42,7 +41,12 @@ export function getPlaylistsSpotifyAction(token) {
             dispatch({
                 type: GET_PLAYLISTS_SPOTIFY,
                 payload: { playlists: result }
-            })
+            });
+        }).catch((error) => {
+            dispatch({
+                type: RAISE_ERROR,
+                payload: { error: error },
+            });
         })
     }
 }
@@ -53,8 +57,6 @@ export function storePlaylistsToTransferSpotifyAction(playlists) {
 }
 
 export function transferToSpotifyAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
-    console.log("HERE");
-    console.log(playlists);
     return (dispatch) => {
         transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey);
         // dispatch({

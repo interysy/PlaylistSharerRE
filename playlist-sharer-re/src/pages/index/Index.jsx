@@ -19,7 +19,6 @@ class Index extends React.Component {
     render() { 
         return ( 
             <div>    
-                <ToggleSwitch/>
                 <div className = "screen_view">
                     <Header className = "header" />   
                     <div className = "login_area">

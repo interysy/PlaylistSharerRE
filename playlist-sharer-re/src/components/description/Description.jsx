@@ -11,10 +11,10 @@ const Description = () => {
       <h1>Description</h1> 
     </div>  
     <div className = "description_content"> 
-      <div className="images left animate">  
+      <div className="images left animate center_section">  
         <img className = "img" src = {CombinedLogos} alt = "Combined Logos"></img>  
       </div> 
-      <div className="animate right">  
+      <div className="animate right center_section">  
       <h3> This React project has been made in order to make it easy to transfer playlists from your Spotify to Youtube , I hope it will be of use! Currently Spotify to Youtube is supported and I am soon to be finishing up the transfer in the other direction</h3>  
       <div className="align_left">
         <h4> Follow the steps below to get sharing ... </h4> 

@@ -49,3 +49,17 @@
     transition: 400ms;
     filter: brightness(75%);
 }
+
+@media screen and (max-width: 600px) {
+    #login_to_services {
+        margin: 1% 5%;
+        text-align: center;
+    }
+    #login_to_services div {
+        gap: 1rem;
+    }
+    .first_row_of_service>span {
+        font-weight: 400;
+        font-size: 0.9rem;
+    }
+}

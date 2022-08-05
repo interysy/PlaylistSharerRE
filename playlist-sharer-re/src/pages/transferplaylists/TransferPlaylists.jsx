@@ -2,11 +2,12 @@ import React from 'react';
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux';
 import { getPlaylistsSpotifyAction , storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
-import Playlist from '../../components/playlist/Playlist'
+import { Link , useNavigate } from 'react-router-dom'  
 import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions'; 
-import './transfer_playlists.css' 
-import Button from '../../components/buttons/Button' 
-import { Link } from 'react-router-dom' 
+ 
+import './transfer_playlists.css'  
+import Button from '../../components/buttons/Button'  
+import Playlist from '../../components/playlist/Playlist'
 import YoutubeLogo from '../../assets/logos/yt_logo_rgb_light.png'  
 import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png' 
 import Footer from '../../components/footer/Footer' 
@@ -23,19 +24,88 @@ class TransferPlaylists extends React.Component {
         this.state = { 
           loading : true, 
           spotifyPlaylists :[], 
-          youtubePlaylists : [], 
+          youtubePlaylists : [],  
+          redirect : false,
         }    
- 
         this.spotifySelectedPlaylists = new Set(); 
         this.youtubeSelectedPlaylists = new Set(); 
-
         this.getPlaylists = this.getPlaylists.bind(this);    
         this.handleCheckbox = this.handleCheckbox.bind(this); 
         this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this); 
         this.refreshPlaylists = this.refreshPlaylists.bind(this);
         
+    }   
+     
+    componentDidMount() {    
+      if (this.props.playlistsSpotify.length !== 0 || this.props.playlistsYoutube.length !== 0) { 
+        this.setState({  
+          spotifyPlaylists : this.props.playlistsSpotify, 
+          youtubePlaylists : this.props.playlistsYoutube,
+        } , () => {  
+          this.setState({ 
+            ...this.state , 
+            loading : false,
+        })});  
+      } else {
+        this.getPlaylists();   
+      } 
+      
+    }
+     
+    componentDidUpdate(prevProps, prevState) {   
+      if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps != this.props) {  
+        this.setState({  
+          spotifyPlaylists : this.props.playlistsSpotify, 
+          youtubePlaylists : this.props.playlistsYoutube,
+        } , () => {  
+          this.setState({ 
+            ...this.state , 
+            loading : false,
+          })}
+      )} else if (this.props.errorSpotify != prevProps.errorSpotify || this.props.errorYoutube != prevProps.errorYoutube) {   
+          sessionStorage.setItem("errorSpotify"  , this.props.errorSpotify); 
+          sessionStorage.setItem("errorYoutube" , this.props.errorYoutube);
+          window.location.replace("http://localhost:3000/error");
+      }
+
     }  
      
+    getPlaylists() {   
+      this.props.getPlaylistsSpotify(this.props.accessTokenSpotify) 
+      this.props.getPlaylistsYoutube(this.props.accessTokenYoutube , this.props.apiKeyYoutube)
+   }  
+     
+    refreshPlaylists() { 
+      this.setState({loading:true}, 
+        () => { 
+          this.getPlaylists();
+        })
+    } 
+     
+    handleCheckbox(event) {   
+      let target = event.target;      
+      let id = target.id; 
+      id = id.split("%");  
+      let name = id[0] 
+      let type = id[1] 
+      let playlistId = id[2] 
+       
+      if (target.checked) {
+        if (type == "Spotify") {  
+            this.spotifySelectedPlaylists.add((name + "%" + playlistId));
+        } else if (type == "Youtube") {    
+            this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
+        }  
+      } else {   
+        if (type == "Spotify") { 
+          this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
+        } else if (type == "Youtube") {    
+          this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
+        } 
+     
+      } 
+    }
+      
     searchForPlaylist(event) { 
       let target = event.target; 
       let type = target.getAttribute("class");  
@@ -54,7 +124,12 @@ class TransferPlaylists extends React.Component {
             playlist.style.display = "flex";
         }
       }
-    }  
+    }   
+     
+    setStateBeforeRedirect() {  
+      this.props.storePlaylistsToTransferSpotify(this.spotifySelectedPlaylists); 
+      this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
+    } 
      
      
     loading() { 
@@ -94,81 +169,11 @@ class TransferPlaylists extends React.Component {
       )
     }  
      
-    refreshPlaylists() { 
-      this.setState({loading:true}, 
-        () => { 
-          this.getPlaylists();
-        })
-    }
-      
-    setStateBeforeRedirect() {  
-      this.props.storePlaylistsToTransferSpotify(this.spotifySelectedPlaylists); 
-      this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
-    } 
-    
-    handleCheckbox(event) {   
-      let target = event.target;      
-      let id = target.id; 
-      id = id.split("%");  
-      let name = id[0] 
-      let type = id[1] 
-      let playlistId = id[2] 
-       
-      if (target.checked) {
-        if (type == "Spotify") {  
-            this.spotifySelectedPlaylists.add((name + "%" + playlistId));
-        } else if (type == "Youtube") {    
-            this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
-        }  
-      } else {   
-        if (type == "Spotify") { 
-          this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
-        } else if (type == "Youtube") {    
-          this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
-        } 
-     
-      } 
-    }
-    
-    getPlaylists() {   
-       this.props.getPlaylistsSpotify(this.props.accessTokenSpotify) 
-       this.props.getPlaylistsYoutube(this.props.accessTokenYoutube , this.props.apiKeyYoutube)
-    }  
-      
-    componentDidMount() {    
-      if (this.props.playlistsSpotify.length !== 0 || this.props.playlistsYoutube.length !== 0) { 
-        this.setState({  
-          spotifyPlaylists : this.props.playlistsSpotify, 
-          youtubePlaylists : this.props.playlistsYoutube,
-        } , () => {  
-          this.setState({ 
-            ...this.state , 
-            loading : false,
-        })}); 
-      } else {
-        this.getPlaylists();   
-      } 
-      
-    }
-     
-    componentDidUpdate(prevProps, prevState) {   
-      if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps != this.props) {  
-        this.setState({  
-          spotifyPlaylists : this.props.playlistsSpotify, 
-          youtubePlaylists : this.props.playlistsYoutube,
-        } , () => {  
-          this.setState({ 
-            ...this.state , 
-            loading : false,
-          })}
-      )}
 
-    }
-
-    render() {
-        return ( 
+    render() { 
+        return (  
             <div>      
-                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()} 
+                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}  
             </div>  
           
         );
@@ -185,7 +190,9 @@ const mapStateToProps = (state) => {
         playlistsSpotify : state.spotify_reducer.playlists || [],  
         playlistsYoutube : state.youtube_reducer.playlists || [],     
         loadedSpotify : state.spotify_reducer.loaded, 
-        loadedYoutube : state.youtube_reducer.loaded,
+        loadedYoutube : state.youtube_reducer.loaded, 
+        errorSpotify : state.spotify_reducer.error, 
+        errorYoutube : state.youtube_reducer.error,
 
     }
 

@@ -10,3 +10,12 @@
     bottom: 0;
     margin-bottom: 1rem; */
 }
+
+@media screen and (max-width: 600px) {
+    .btn {
+        padding: 0.5rem 0.25rem;
+        border-radius: 1rem;
+        text-align: center;
+        font-size: 0.7rem;
+    }
+}

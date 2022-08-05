@@ -1,0 +1,16 @@
+ #error {
+     text-align: center;
+ }
+ 
+ #error h1 {
+     font-size: 2rem;
+     font-weight: 700;
+     margin: 2rem 0;
+     color: var(--color-primary);
+ }
+ 
+ .stick_to_bottom {
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+ }

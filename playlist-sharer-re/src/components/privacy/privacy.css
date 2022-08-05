@@ -21,3 +21,20 @@
     border: 2px solid var(--color-bg-variant);
     background-color: var(--color-extra);
 }
+
+@media screen and (max-width: 600px) {
+    #privacy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .privacy_heading {
+        font-size: 0.7rem;
+        margin-bottom: 3rem;
+    }
+    .privacy_content {
+        font-size: 0.75rem;
+        width: 250px;
+    }
+}

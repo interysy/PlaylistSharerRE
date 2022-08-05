@@ -64,6 +64,40 @@
     .description_content {
         grid-template-columns: 1fr;
         gap: 5rem;
+    }
+    .img {
+        max-width: 400px;
+    }
+    .description_content p {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .description_content {
+        padding: 0.1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .description_content p {
+        text-align: center;
+    }
+    .description_heading {
+        font-size: 0.7rem;
+        margin-bottom: 5rem;
+    }
+    .img {
+        max-width: 200px;
+        position: static;
+    }
+    .right {
         padding: 1rem;
+        font-size: 0.75rem;
+        width: 250px;
+    }
+    .right>* {
+        margin: 0.1rem;
     }
 }

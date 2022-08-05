@@ -66,14 +66,31 @@ textarea {
 @media screen and (max-width: 1080px) {
     .grid {
         grid-template-columns: 1fr;
-    }
-    .contact_option {}
-    .contactme_alt_contact {
-        margin: 0.2rem;
+        gap: 4rem;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .contact_option {}
-    .contactme_alt_contact {}
+    .contactme_heading {
+        font-size: 0.7rem;
+        margin-bottom: 3rem;
+    }
+    .grid {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .contactme_alt_contact {
+        align-items: center;
+        margin: 0.5rem;
+        font-size: 0.75rem;
+    }
+    .contact_option {
+        padding: 0.5rem;
+        width: 250px;
+    }
+    .contactme_form {
+        width: 250px;
+    }
 }
