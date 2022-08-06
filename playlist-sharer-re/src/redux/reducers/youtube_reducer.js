@@ -1,4 +1,4 @@
-import { LOG_IN_YOUTUBE, LOG_OUT_YOUTUBE, GET_PLAYLISTS_YOUTUBE, STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, UPDATE_FAILED_SONGS, RAISE_ERROR } from '../actions/youtube_actions'
+import { LOG_IN_YOUTUBE, LOG_OUT_YOUTUBE, GET_PLAYLISTS_YOUTUBE, STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, UPDATE_FAILED_SONGS, SONGS_FAILED_TO_TRANSFER, RAISE_ERROR } from '../actions/youtube_actions'
 
 const default_state = {
     loggedIn: false,
@@ -9,7 +9,7 @@ const default_state = {
     selectedPlaylists: new Set(),
     failedSongs: [],
     completedTransfer: false,
-    error: null,
+    error: "",
 }
 
 
@@ -23,8 +23,8 @@ const youtube_reducer = (state = default_state, action) => {
             return {...state, playlists: action.payload.playlists, loaded: true }
         case STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE:
             return {...state, selectedPlaylists: action.payload.playlists }
-        case UPDATE_FAILED_SONGS:
-            return {...state, failedSongs: action.payload.failedSongs, completedTransfer: true }
+        case SONGS_FAILED_TO_TRANSFER:
+            return {...state, failedToTransfer: action.payload.failedToTransfer }
         case RAISE_ERROR:
             return {...state, error: action.payload.error }
         default:

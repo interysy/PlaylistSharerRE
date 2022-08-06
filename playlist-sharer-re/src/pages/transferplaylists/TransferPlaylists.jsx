@@ -1,9 +1,10 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux';
-import { getPlaylistsSpotifyAction , storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
-import { Link , useNavigate } from 'react-router-dom'  
-import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions'; 
+import { getPlaylistsSpotifyAction , resetErrors, storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
+import { Link } from 'react-router-dom'  
+import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions';  
+import Error from '../../components/error/Error'
  
 import './transfer_playlists.css'  
 import Button from '../../components/buttons/Button'  
@@ -20,24 +21,27 @@ class TransferPlaylists extends React.Component {
    
     constructor(props) { 
         super(props);    
-         
+        
         this.state = { 
           loading : true, 
           spotifyPlaylists :[], 
           youtubePlaylists : [],  
-          redirect : false,
-        }    
+          redirect : false, 
+        }     
+
         this.spotifySelectedPlaylists = new Set(); 
-        this.youtubeSelectedPlaylists = new Set(); 
+        this.youtubeSelectedPlaylists = new Set();  
+
         this.getPlaylists = this.getPlaylists.bind(this);    
         this.handleCheckbox = this.handleCheckbox.bind(this); 
         this.setStateBeforeRedirect = this.setStateBeforeRedirect.bind(this); 
-        this.refreshPlaylists = this.refreshPlaylists.bind(this);
-        
+        this.refreshPlaylists = this.refreshPlaylists.bind(this);  
+        this.createPopUpForError = this.createPopUpForError.bind(this); 
+        this.beforeRedirectOnError = this.beforeRedirectOnError.bind(this);
     }   
      
-    componentDidMount() {    
-      if (this.props.playlistsSpotify.length !== 0 || this.props.playlistsYoutube.length !== 0) { 
+    componentDidMount() {  
+      if (this.props.playlistsSpotify.length !== 0 && this.props.playlistsYoutube.length !== 0) { 
         this.setState({  
           spotifyPlaylists : this.props.playlistsSpotify, 
           youtubePlaylists : this.props.playlistsYoutube,
@@ -52,7 +56,7 @@ class TransferPlaylists extends React.Component {
       
     }
      
-    componentDidUpdate(prevProps, prevState) {   
+    componentDidUpdate(prevProps, prevState) {     
       if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps != this.props) {  
         this.setState({  
           spotifyPlaylists : this.props.playlistsSpotify, 
@@ -62,10 +66,14 @@ class TransferPlaylists extends React.Component {
             ...this.state , 
             loading : false,
           })}
-      )} else if (this.props.errorSpotify != prevProps.errorSpotify || this.props.errorYoutube != prevProps.errorYoutube) {   
-          sessionStorage.setItem("errorSpotify"  , this.props.errorSpotify); 
-          sessionStorage.setItem("errorYoutube" , this.props.errorYoutube);
-          window.location.replace("http://localhost:3000/error");
+      )}  
+       
+      if ((prevProps.errorSpotify === "" || prevProps.errorYoutube === "") && (prevProps.errorSpotify !== this.props.errorSpotify || prevProps.errorYoutube !== this.props.errorYoutube)) {    
+          this.setState({  
+            ...this.state, 
+            loading : false,
+            redirect : true,
+          });
       }
 
     }  
@@ -75,11 +83,17 @@ class TransferPlaylists extends React.Component {
       this.props.getPlaylistsYoutube(this.props.accessTokenYoutube , this.props.apiKeyYoutube)
    }  
      
-    refreshPlaylists() { 
-      this.setState({loading:true}, 
-        () => { 
-          this.getPlaylists();
-        })
+    refreshPlaylists() {   
+      if (this.state.redirect) {  
+        let elementToBlur = document.getElementById("blur");
+        elementToBlur.style.filter = "blur(0)"; 
+        this.beforeRedirectOnError(null ,this.getPlaylists);
+      } else { 
+        this.setState({loading:true}, 
+          () => { 
+            this.getPlaylists();
+          }) 
+      }
     } 
      
     handleCheckbox(event) {   
@@ -92,15 +106,15 @@ class TransferPlaylists extends React.Component {
        
       if (target.checked) {
         if (type == "Spotify") {  
-            this.spotifySelectedPlaylists.add((name + "%" + playlistId));
+            this.spotifySelectedPlaylists.add(("3" + "%" + name + "%" + playlistId));
         } else if (type == "Youtube") {    
-            this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
+            this.youtubeSelectedPlaylists.add(("3" + "%" + name + "%" + playlistId));
         }  
       } else {   
         if (type == "Spotify") { 
-          this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
+          this.spotifySelectedPlaylists.delete(("3" + "%" + name + "%" + playlistId));
         } else if (type == "Youtube") {    
-          this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
+          this.youtubeSelectedPlaylists.delete(("3" + "%" + name + "%" + playlistId));
         } 
      
       } 
@@ -124,14 +138,30 @@ class TransferPlaylists extends React.Component {
             playlist.style.display = "flex";
         }
       }
-    }   
+    }    
      
     setStateBeforeRedirect() {  
       this.props.storePlaylistsToTransferSpotify(this.spotifySelectedPlaylists); 
       this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
     } 
      
-     
+    createPopUpForError() { 
+      let elementToBlur = document.getElementById("blur");
+      elementToBlur.style.filter = "blur(2px)";   
+      return (<div><Error errorYoutube = {this.props.errorYoutube} errorSpotify = {this.props.errorSpotify} beforeRedirect = {this.beforeRedirectOnError} localRefresh = {this.refreshPlaylists}/></div>)
+    } 
+ 
+    beforeRedirectOnError(event = null , callback = function() {}) {    
+      this.props.resetErrorsSpotify(); 
+      this.props.resetErrorsYoutube();   
+      this.setState({ 
+        loading : true, 
+        spotifyPlaylists :[], 
+        youtubePlaylists : [],  
+        redirect : false, 
+      } , callback());
+    } 
+
     loading() { 
       return (   
         <Loader/>
@@ -171,10 +201,13 @@ class TransferPlaylists extends React.Component {
      
 
     render() { 
-        return (  
-            <div>      
-                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}  
-            </div>  
+        return (   
+          <div>
+            <div id = "blur">      
+                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}   
+            </div>   
+             { (this.state.redirect) ?  this.createPopUpForError() : null}  
+          </div>
           
         );
     } 
@@ -203,7 +236,9 @@ const mapDispatchToProps = (dispatch) => {
     getPlaylistsSpotify : bindActionCreators(getPlaylistsSpotifyAction , dispatch), 
     getPlaylistsYoutube : bindActionCreators(getPlaylistsYoutubeAction , dispatch), 
     storePlaylistsToTransferSpotify : bindActionCreators( storePlaylistsToTransferSpotifyAction , dispatch), 
-    storePlaylistsToTransferYoutube : bindActionCreators( storePlaylistsToTransferYoutubeAction , dispatch),
+    storePlaylistsToTransferYoutube : bindActionCreators( storePlaylistsToTransferYoutubeAction , dispatch),  
+    resetErrorsSpotify : bindActionCreators(resetErrors , dispatch), 
+    resetErrorsYoutube : bindActionCreators(resetErrors , dispatch),
 
   } 
 

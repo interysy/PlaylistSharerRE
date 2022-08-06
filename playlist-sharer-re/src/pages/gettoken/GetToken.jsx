@@ -39,7 +39,7 @@ class GetToken extends React.Component {
             }
 
         }   
-        var time = 3000; 
+        let time = 3000; 
         this.timeoutId = setTimeout(() => { 
             window.location.replace("http://localhost:3000/");
         },time)
@@ -48,7 +48,6 @@ class GetToken extends React.Component {
     } 
       
     cancelTimeout() {  
-        console.log("Clearing timeout");
         clearTimeout(this.timeoutId);
     }
     render() { 

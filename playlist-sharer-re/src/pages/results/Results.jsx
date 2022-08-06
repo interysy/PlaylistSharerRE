@@ -29,12 +29,13 @@ class Results extends React.Component {
 
     componentDidMount() { 
         if (this.props.loggedInSpotify === false || this.props.loggedInYoutube === false) { 
-            window.location.replace('http://localhost:3001/error');
+            // window.location.replace('http://localhost:3001/error'); 
+            console.log("Return...");
         } else if ( this.props.selectedPlaylistsSpotify.length === 0 && this.props.selectedPlaylistsYoutube.length === 0){ 
             this.noPlaylistsToTransfer();
         } else {   
             this.transferPlaylistsToYoutube(); 
-            this.transferPlaylistsToSpotify();    
+            //this.transferPlaylistsToSpotify();    
         }
     }  
      

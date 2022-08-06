@@ -30,17 +30,28 @@ export function generateRandomString(length) {
 
 // GET PLAYLISTS
 export function getPlaylistsSpotify(token) {
-
-    var playlists_url = BASESPOTIFYAPILINK + '/me/playlists?limit=50';
+    console.log("Getting playlists spotify");
+    let url = BASESPOTIFYAPILINK + '/me/playlists?limit=50';
 
     return Promise.all([
         new Promise((resolve, reject) => {
-            getData(playlists_url, [], resolve, reject, token)
+            getData(url, [], token, resolve, reject);
         }),
     ])
 }
 
-export function getData(url, data, resolve, reject, token) {
+export function getTracksFromPlaylistSpotify(token, playlist) {
+    console.log("Getting playlists from spotify")
+    var url = "https://api.spotify.com/v1/playlists/" + playlist + "/tracks?limit=50";
+
+    return Promise.all([
+        new Promise((resolve, reject) => {
+            getData(url, [], token, resolve, reject);
+        }),
+    ])
+}
+
+export function getData(url, data, token, resolve, reject) {
     fetch(url, {
         headers: {
             'Authorization': 'Bearer ' + token
@@ -49,19 +60,24 @@ export function getData(url, data, resolve, reject, token) {
         let responseAsJson = response.json();
         return responseAsJson;
     }).then((response) => {
-        let retrievedData = data.concat(response.items);
-        if (response.next !== null) {
-            getData(response.next, retrievedData, resolve, reject, token)
+        if (response.error != null) {
+            throw 'Message : ' + response.error.message + ' || Status Code : ' + response.error.status
         } else {
-            resolve(retrievedData)
+            let retrievedData = data.concat(response.items);
+            if (response.next !== null) {
+                getData(response.next, retrievedData, token, resolve, reject)
+            } else {
+                resolve(retrievedData)
+            }
         }
     }).catch(error => {
-        console.log(error)
+        reject(error)
     })
 }
 
 
 export function searchForTracksSpotify(token, name, artist) {
+    console.log("Searching for track in spotify");
     let url = (artist === null) ? BASESPOTIFYAPILINK + '/search?q=track:' + name + '&type=track&limit=1' : BASESPOTIFYAPILINK + '/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
 
     return new Promise((resolve, reject) => {
@@ -86,20 +102,6 @@ export function searchForTracksSpotify(token, name, artist) {
 
 }
 
-
-
-
-
-
-export function getTracksFromPlaylistSpotify(token, playlist) {
-    var url = BASESPOTIFYAPILINK + "/playlists/" + playlist + "/tracks?limit=50";
-
-    return Promise.all([
-        new Promise((resolve, reject) => {
-            getData(url, [], resolve, reject, token)
-        }),
-    ])
-}
 
 
 export function createPlaylistsSpotify(playlists, spotifyToken) {
@@ -146,8 +148,8 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         currentPlaylist = currentPlaylist.split("%");
-        let currentPlaylistName = currentPlaylist[0];
-        let currentPLaylistId = currentPlaylist[1];
+        let currentPlaylistName = currentPlaylist[1];
+        let currentPLaylistId = currentPlaylist[2];
         createPlaylistSpotify(currentPlaylistName, spotifyToken, url).then((response) => {
             data.push({
                 name: currentPlaylistName,
@@ -183,7 +185,6 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
         let currentPlaylistYoutubeId = currentPlaylist.oldId;
         getTracksFromPlaylistYoutube(youtubeToken, youtubeApiKey, currentPlaylistYoutubeId).then((response) => {
             currentPlaylist.tracks = response
-                // console.log(JSON.parse(JSON.stringify(currentPlaylist.tracks)));
             data.push(currentPlaylist)
             return data
         }).then((data) => {
@@ -215,21 +216,18 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, data) {
         }
 
         searchForTracksSpotify(token, name, artist).then((songId) => {
-            console.log(songId);
             data.push(songId);
         }).then(() => {
             insertTracksIntoPlaylist(tracks, playlistId, token, data);
         });
 
     } else {
-        console.log(data);
         insertIntoPlaylist(playlistId, token, data);
         return;
     }
 }
 
 function insertIntoPlaylist(playlistId, token, data) {
-    console.log("Inserting");
 
     let url = BASESPOTIFYAPILINK + "/users/me/playlists/" + playlistId + "/tracks";
     data = data.filter(element => (typeof element === typeof "" && element != ""));

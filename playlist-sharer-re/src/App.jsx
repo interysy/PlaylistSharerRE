@@ -5,7 +5,6 @@ import Index from './pages/index/Index'
 import GetToken from './pages/gettoken/GetToken' 
 import TransferPlaylists from './pages/transferplaylists/TransferPlaylists' 
 import Results from './pages/results/Results' 
-import Error from './pages/error/Error'
  
 import './App.css'; 
 
@@ -17,7 +16,6 @@ function App() {
             <Route path = '/gettoken' element={<GetToken/>}/> 
             <Route path = '/transferplaylists' element = {<TransferPlaylists/>}/> 
             <Route path = '/results' element = {<Results/>}/> 
-            <Route path = '/error' element = {<Error/>}/>
           </Routes>
         </Router>
     );
