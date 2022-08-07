@@ -37,3 +37,35 @@
     align-items: center;
     margin: 5rem;
 }
+
+@media screen and (max-width: 1400px) {
+    #error {
+        width: 75%;
+        height: 75%;
+    }
+    .rectify_btns {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .rectify_btns>* {
+        margin: 3rem 0;
+        font-size: 0.75rem;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    #error {
+        width: 95%;
+        height: 95%;
+    }
+    #error li {
+        margin: 0.5rem;
+    }
+    .rectify_btns {
+        margin: 0.5rem 0;
+    }
+    .rectify_btns>* {
+        margin: 1.5rem 0;
+        font-size: 0.75rem;
+    }
+}
