@@ -52,8 +52,11 @@ export function transferToYoutube(playlists, spotifyToken, youtubeToken, youtube
     return new Promise((resolve, reject) => {
         createPlaylistsYoutube(playlists, youtubeToken, youtubeApiKey).then((createdPlaylists) => {
             getTracksToTransferToPlaylists(createdPlaylists[0], spotifyToken, youtubeToken, youtubeApiKey).then((createdPlaylistsWithTracks) => {
-                let failed = handlePlaylists(createdPlaylistsWithTracks[0], youtubeToken, youtubeApiKey, []);
-                return failed;
+                resolve(Promise.all([
+                    new Promise((resolve, reject) => {
+                        handlePlaylists(createdPlaylistsWithTracks[0], youtubeToken, youtubeApiKey, [], resolve, reject);
+                    }),
+                ]));
             }).catch((error) => {
                 reject(error)
             })
@@ -105,7 +108,7 @@ export function createPlaylistsYoutubeInner(playlists, data, resolve, reject, to
 export function createPlaylistYoutube(token, apiKey, title) {
 
     let description = 'Playlist shared from Spotify!';
-    let url = 'https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus&key=' + apiKey;
+    let url = BASEYOUTUBEAPILINK + '/playlists?part=snippet%2Cstatus&key=' + apiKey;
     let options = {
         'method': 'POST',
         'body': JSON.stringify({
@@ -151,7 +154,7 @@ function deletePlaylistsYoutube(playlists, token, apiKey) {
 
 
 function deletePlaylistYoutube(id, token, apiKey) {
-    let url = "https://youtube.googleapis.com/youtube/v3/playlists?id=" + id + "&key=" + apiKey;
+    let url = BASEYOUTUBEAPILINK + "/playlists?id=" + id + "&key=" + apiKey;
     let options = {
         'method': 'DELETE',
         'headers': {
@@ -199,28 +202,24 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
 }
 
 // GENERAL PLAYLIST HANDLING 
-export function handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed) {
+export function handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed, resolve, reject) {
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         let playlistId = currentPlaylist.newId;
         let tracks = currentPlaylist.tracks[0];
-        let result = insertTracksIntoPlaylist(tracks, playlistId, youtubeToken, youtubeApiKey, []);
-        if (typeof result === typeof []) {
-            return result;
-        } else {
-            failed.concat(result);
-        }
-        handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed);
+        insertTracksIntoPlaylist(tracks, playlistId, youtubeToken, youtubeApiKey, []).then((result) => {
+            failed = failed.concat({ name: currentPlaylist.name, failed: result });
+            handlePlaylists(playlists, youtubeToken, youtubeApiKey, failed, resolve, reject);
+        });
     } else {
-        console.log(failed)
-        return failed
+        resolve(failed)
     }
 }
 
 
 // SEARCHING 
 function searchForTrack(token, apiKey, artist, title) {
-    let url = 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + artist.replace(" ", "%") + '%-%' + title.replace(" ", "%") + '&key=' + apiKey;
+    let url = BASEYOUTUBEAPILINK + '/search?part=snippet&maxResults=1&q=' + artist.replace(" ", "%") + '%-%' + title.replace(" ", "%") + '&key=' + apiKey;
     return (Promise.all([
         new Promise((resolve, reject) => {
             searchForTrackInner(url, [], resolve, reject, token);
@@ -247,8 +246,16 @@ export function searchForTrackInner(url, data, resolve, reject, token) {
     });
 }
 
-// INSERTION 
+// INSERTION  
+
 export function insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, failed) {
+    return (Promise.all([
+        new Promise((resolve, reject) => {
+            insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey, failed, resolve, reject);
+        }),
+    ]));
+}
+export function insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey, failed, resolve, reject) {
     if (tracks.length > 0) {
         let currentTrack = tracks.shift();
         let artist = currentTrack.track.artists[0].name
@@ -256,33 +263,33 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, fail
 
         searchForTrack(token, apiKey, artist, name).then((response) => {
             if (response[0].error) {
-                throw response[0].error.message
+                // throw response[0].error.message 
+                console.log(response[0].error);
+                failed.push(artist + " - " + name);
             } else {
                 let videoId = response[0].items[0].id.videoId;
-                return videoId
+                return videoId;
             }
         }).then((videoId) => {
             setTimeout(() => {
                 insertIntoPlaylist(token, apiKey, playlistId, videoId).then((response) => {
-                    console.log(response);
-                    if (response.error) {
+                    if (response[0].error) {
+                        console.log(response[0].error);
                         failed.push(artist + " - " + name);
                     }
-                    insertTracksIntoPlaylist(tracks, playlistId, token, apiKey, failed);
+                    insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey, failed, resolve, reject);
                 })
             }, 500);
-        }).catch((error) => {
-            return error
-        })
+        });
 
     } else {
         console.log(failed);
-        return failed;
+        resolve(failed);
     }
 }
 
 export function insertIntoPlaylist(token, apiKey, playlist, video) {
-    let url = 'https://youtube.googleapis.com/youtube/v3/playlistItems?part=id%2Csnippet&key=' + apiKey;
+    let url = BASEYOUTUBEAPILINK + '/playlistItems?part=id%2Csnippet&key=' + apiKey;
 
     return (Promise.all([
         new Promise((resolve, reject) => {

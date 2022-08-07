@@ -5,7 +5,7 @@ export const LOG_IN_YOUTUBE = 'LOG_IN_YOUTUBE';
 export const LOG_OUT_YOUTUBE = 'LOG_OUT_YOUTUBE';
 export const GET_PLAYLISTS_YOUTUBE = 'GET_PLAYLISTS_YOUTUBE';
 export const STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE = 'STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE';
-export const SONGS_FAILED_TO_TRANSFER = 'SONGS_FAILED_TO_TRANSFER';
+export const SONGS_FAILED_TO_TRANSFER_YOUTUBE = 'SONGS_FAILED_TO_TRANSFER_YOUTUBE';
 export const RAISE_ERROR_YOUTUBE = 'RAISE_ERROR_YOUTUBE'
 
 export function loginYoutubeAction(token, apiKey) {
@@ -55,7 +55,10 @@ export function resetErrorsYoutubeAction() {
 export function transferToYoutubeAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
     return (dispatch) => {
         transferToYoutube(playlists, spotifyToken, youtubeToken, youtubeApiKey).then((response) => {
-            console.log(response);
+            dispatch({
+                type: SONGS_FAILED_TO_TRANSFER_YOUTUBE,
+                payload: { failed: response[0] }
+            });
         }).catch((error) => {
             dispatch({
                 type: RAISE_ERROR_YOUTUBE,

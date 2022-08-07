@@ -1,0 +1,53 @@
+ #done_page {
+     color: var(--color-primary);
+     display: flex;
+     flex-direction: column;
+     text-align: center;
+ }
+ 
+ #done_page>h1,
+ h3 {
+     margin: 2rem 0;
+ }
+ 
+ .service_playlists_result {
+     margin: 2rem;
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     grid-gap: 3.3%;
+     padding: 2rem;
+     background-color: var(--color-bg-variant);
+     border: 2px solid var(--color-white);
+     border-radius: 2rem;
+     height: 35vh;
+     overflow: auto;
+ }
+ 
+ .service_playlists_result>h2 {
+     margin: 2rem;
+ }
+ 
+ .result_image {
+     max-width: min-content;
+ }
+ 
+ .failed_songs {
+     width: 90%;
+     height: 200px;
+     display: flex;
+     flex-direction: column;
+     padding: 2rem;
+     border: 2px solid var(--color-primary);
+     overflow: auto;
+     border-radius: 2rem;
+     margin: 0 1rem;
+ }
+ 
+ .failed_songs>li {
+     margin: 3rem;
+ }
+ 
+ .failed_songs>ol {
+     margin: 1rem;
+     text-align: left;
+ }

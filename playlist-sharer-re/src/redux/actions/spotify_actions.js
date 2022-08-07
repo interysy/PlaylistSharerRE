@@ -6,7 +6,7 @@ export const LOG_OUT_SPOTIFY = 'LOG_OUT_SPOTIFY';
 export const GET_PLAYLISTS_SPOTIFY = 'GET_PLAYLISTS_SPOTIFY';
 export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY';
 export const UPDATE_AUTHORISATION_STATE = 'UPDATE_AUTHORISATION_STATE';
-export const SONGS_FAILED_TO_TRANSFER = 'SONGS_FAILED_TO_TRANSFER';
+export const SONGS_FAILED_TO_TRANSFER_SPOTIFY = 'SONGS_FAILED_TO_TRANSFER_SPOTIFY';
 export const RAISE_ERROR_SPOTIFY = 'RAISE_ERROR_SPOTIFY';
 
 export function updateAuthorisationStateAction(state) {
@@ -63,10 +63,22 @@ export function resetErrorsSpotifyAction() {
 
 export function transferToSpotifyAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
     return (dispatch) => {
-        let failed = transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey);
-        // dispatch({
-        //     type: UPDATE_FAILED_SONGS,
-        //     payload: { failedSongs: failed },
-        // })
+        transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey).then((failed) => {
+                console.log(failed);
+                dispatch({
+                    type: SONGS_FAILED_TO_TRANSFER_SPOTIFY,
+                    payload: { failedToTransfer: failed[0] }
+                });
+            }).catch((error) => {
+                console.log(error);
+                dispatch({
+                    type: RAISE_ERROR_SPOTIFY,
+                    payload: { error: error },
+                })
+            })
+            // dispatch({
+            //     type: UPDATE_FAILED_SONGS,
+            //     payload: { failedSongs: failed },
+            // })
     }
 }

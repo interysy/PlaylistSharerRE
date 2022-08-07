@@ -1,5 +1,6 @@
 import { getTracksFromPlaylistYoutube, getInformationUsingSelenium } from '../youtube/youtube_funcs'
 
+
 const BASESPOTIFYAPILINK = "https://api.spotify.com/v1";
 const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
 const REDIRECT_URI = `http://localhost:3000/gettoken`;
@@ -39,8 +40,9 @@ export function getPlaylistsSpotify(token) {
     ])
 }
 
+// GET TRACKS - USED IN YOUTUBE FUNCS
 export function getTracksFromPlaylistSpotify(token, playlist) {
-    var url = "https://api.spotify.com/v1/playlists/" + playlist + "/tracks?limit=50";
+    var url = BASESPOTIFYAPILINK + "/playlists/" + playlist + "/tracks?limit=50";
 
     return Promise.all([
         new Promise((resolve, reject) => {
@@ -49,6 +51,7 @@ export function getTracksFromPlaylistSpotify(token, playlist) {
     ])
 }
 
+// USED WITH ANY GET REQUEST
 export function getData(url, data, token, resolve, reject) {
     fetch(url, {
         headers: {
@@ -74,33 +77,28 @@ export function getData(url, data, token, resolve, reject) {
 }
 
 
-export function searchForTracksSpotify(token, name, artist) {
-    let url = (artist === null) ? BASESPOTIFYAPILINK + '/search?q=track:' + name + '&type=track&limit=1' : BASESPOTIFYAPILINK + '/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
+// TRANSFER TO SPOTIFY MAINLOOP 
 
+export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
     return new Promise((resolve, reject) => {
-        fetch(url, {
-            headers: {
-                "Accept": "application/json",
-                'Authorization': 'Bearer ' + token,
-                "Content-Type": "application/json",
-            }
-        }).then((response) => {
-            return response.json();
-        }).then((responseAsJson) => {
-            if (responseAsJson.tracks.items.length === 0) {
-                resolve("");
-            } else {
-                resolve(responseAsJson.tracks.items[0].id);
-            }
+        createPlaylistsSpotify(playlists, spotifyToken).then((createdPlaylists) => {
+            getTracksToTransferToPlaylists(createdPlaylists, youtubeToken, youtubeApiKey).then((playlistsWithTracks) => {
+                resolve(Promise.all([
+                    new Promise((resolve, reject) => {
+                        handlePlaylists(playlistsWithTracks[0], spotifyToken, [], resolve, reject);
+                    }),
+                ]));
+            }).catch((error) => {
+                reject(error);
+            })
         }).catch((error) => {
-            resolve(error);
+            reject(error);
         })
-    });
-
+    })
 }
 
 
-
+// CREATE PLAYLISTS - STEP 1 OF TRANSFER  
 export function createPlaylistsSpotify(playlists, spotifyToken) {
     let url = BASESPOTIFYAPILINK + '/me/playlists';
     return Promise.all([
@@ -131,7 +129,11 @@ export function createPlaylistSpotify(playlist, token, url) {
             return fetch(url, options).then((response) => {
                 return response.json()
             }).then((responseAsJson) => {
-                resolve(responseAsJson.id);
+                if (responseAsJson.error) {
+                    throw "Message : Couldn't create a playlist in spotify" + ' || Status Code : ' + responseAsJson.error.status
+                } else {
+                    resolve(responseAsJson.id);
+                }
             }).catch((error) => {
                 reject(error);
             })
@@ -144,8 +146,8 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         currentPlaylist = currentPlaylist.split("%");
-        let currentPlaylistName = currentPlaylist[1];
-        let currentPLaylistId = currentPlaylist[2];
+        let currentPlaylistName = currentPlaylist[0];
+        let currentPLaylistId = currentPlaylist[1];
         createPlaylistSpotify(currentPlaylistName, spotifyToken, url).then((response) => {
             data.push({
                 name: currentPlaylistName,
@@ -155,6 +157,10 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
             return data;
         }).then((data) => {
             createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve);
+        }).catch((error) => {
+            // delete playlists - not supported in api
+            reject(error)
+
         })
 
     } else {
@@ -163,7 +169,7 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
 
 }
 
-
+// GETTING TRACKS FROM SPOTIFY - STEP 2 
 export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeApiKey) {
     return (Promise.all([
         new Promise((resolve, reject) => {
@@ -175,28 +181,82 @@ export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeA
 
 
 export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey) {
-    if (playlists.length > 0) {
-        let currentPlaylist = playlists.shift();
-        currentPlaylist = currentPlaylist[0];
+    if (playlists[0].length > 0) {
+        let currentPlaylist = playlists[0].shift();
+        currentPlaylist = currentPlaylist;
         let currentPlaylistYoutubeId = currentPlaylist.oldId;
         getTracksFromPlaylistYoutube(youtubeToken, youtubeApiKey, currentPlaylistYoutubeId).then((response) => {
             currentPlaylist.tracks = response
-            data.push(currentPlaylist)
+            data.push(currentPlaylist);
             return data
         }).then((data) => {
             getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey);
         }).catch((error) => {
+            if (typeof error === typeof {}) {
+                error = error.message;
+            }
             reject(error)
         })
 
     } else {
         resolve(data);
     }
+}
+
+// PLAYLIST HANDLER - THIRD STEP
+export function handlePlaylists(playlists, spotifyToken, failed, resolve, reject) {
+    if (playlists.length > 0) {
+        let currentPlaylist = playlists.shift();
+        let currentPlaylistSpotifyId = currentPlaylist.newId;
+        let currentPlaylistTracksToAdd = currentPlaylist.tracks[0];
+        insertTracksIntoPlaylist(currentPlaylistTracksToAdd, currentPlaylistSpotifyId, spotifyToken, [], [], resolve, reject).then((failedSongs) => {
+            failed.push({ failedSongs: failedSongs, name: currentPlaylist.name });
+            handlePlaylists(playlists, spotifyToken, failed, resolve, reject);
+        });
+    } else {
+        resolve(failed);
+    }
+}
+
+// SEARCHING FOR TRACKS - STEP 4
+
+export function searchForTracksSpotify(token, name, artist) {
+    let url = (artist === null) ? BASESPOTIFYAPILINK + '/search?q=track:' + name + '&type=track&limit=1' : BASESPOTIFYAPILINK + '/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
+
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            headers: {
+                "Accept": "application/json",
+                'Authorization': 'Bearer ' + token,
+                "Content-Type": "application/json",
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((responseAsJson) => {
+            if (responseAsJson.tracks.items.length === 0) {
+                throw "Couldn't find track"
+            } else {
+                resolve(responseAsJson.tracks.items[0].id);
+            }
+        }).catch((error) => {
+            reject(error);
+        })
+    });
 
 }
 
 
-export function insertTracksIntoPlaylist(tracks, playlistId, token, data) {
+
+
+export function insertTracksIntoPlaylist(tracks, playlistId, token, data, failed) {
+    return Promise.all([
+        new Promise((resolve, reject) => {
+            insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject);
+        }),
+    ])
+}
+
+export function insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject) {
     if (tracks.length > 0) {
         let currentTrack = tracks.shift();
         let title = currentTrack.snippet.title.replace(/\([^()]*\)/g, '').trim().split("-");
@@ -212,19 +272,23 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, data) {
         searchForTracksSpotify(token, name, artist).then((songId) => {
             data.push(songId);
         }).then(() => {
-            insertTracksIntoPlaylist(tracks, playlistId, token, data);
+            insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject);
+        }).catch((error) => {
+            failed.push(artist + " - " + name);
+            insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject);
         });
 
     } else {
-        insertIntoPlaylist(playlistId, token, data);
-        return;
+        insertIntoPlaylist(playlistId, token, data).then(() => {
+            resolve(failed);
+        });
     }
 }
 
+//INSERT INTO PLAYLIST - LAST STEP
 function insertIntoPlaylist(playlistId, token, data) {
-
     let url = BASESPOTIFYAPILINK + "/users/me/playlists/" + playlistId + "/tracks";
-    data = data.filter(element => (typeof element === typeof "" && element != ""));
+
     for (var i = 0; i < data.length; i++) {
         data[i] = "spotify:track:" + data[i];
     }
@@ -243,28 +307,7 @@ function insertIntoPlaylist(playlistId, token, data) {
         }
     }
 
-    fetch(url, options).then((response) => {
+    return fetch(url, options).then((response) => {
         console.log(response);
-    })
-}
-
-
-export function handlePlaylists(playlists, spotifyToken, failed) {
-    if (playlists.length > 0) {
-        let currentPlaylist = playlists.shift();
-        currentPlaylist = currentPlaylist[0]
-        let currentPlaylistSpotifyId = currentPlaylist.newId;
-        let currentPlaylistTracksToAdd = currentPlaylist.tracks[0];
-        insertTracksIntoPlaylist(currentPlaylistTracksToAdd, currentPlaylistSpotifyId, spotifyToken, []).then(() => {
-            handlePlaylists(playlists, spotifyToken, failed);
-        });
-    }
-}
-
-export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
-    createPlaylistsSpotify(playlists, spotifyToken).then((createdPlaylists) => {
-        getTracksToTransferToPlaylists(createdPlaylists, youtubeToken, youtubeApiKey).then((playlistsWithTracks) => {
-            let failed = handlePlaylists(playlistsWithTracks, spotifyToken, []);
-        })
     })
 }

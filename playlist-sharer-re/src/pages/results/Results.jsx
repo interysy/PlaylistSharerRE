@@ -4,7 +4,11 @@ import { bindActionCreators } from 'redux';
 import { transferToYoutubeAction } from '../../redux/actions/youtube_actions'   
 import { transferToSpotifyAction } from '../../redux/actions/spotify_actions'
 import Loader from '../../components/loader/Loader' 
-import Error from '../../components/error/Error'
+import Error from '../../components/error/Error'  
+import Footer from '../../components/footer/Footer'
+import './results.css' 
+import YoutubeLogo from '../../assets/logos/yt_logo_rgb_light.png'  
+import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png' 
 
 class Results extends React.Component {
     constructor(props) {
@@ -13,6 +17,8 @@ class Results extends React.Component {
             done : false, 
             redirect : false,
         }  
+         
+        this.finishedLoading = this.finishedLoading.bind(this); 
     }  
      
     noPlaylistsToTransfer() { 
@@ -22,10 +28,12 @@ class Results extends React.Component {
     }
       
     componentDidUpdate(prevProps , prevState) {  
-        if (this.props.completedTransferYoutube !== prevProps.completedTransfer && prevState.done === false) { 
+        if ((this.props.completedTransferYoutube !== prevProps.completedTransfer && this.props.completedTransferSpotify  !== prevProps.completedTransferSpotify) && prevState.done === false) { 
             this.setState({ 
                 done : true,
-            })
+            }); 
+            console.log(this.props.failedSongsYoutube); 
+            console.log(this.props.failedSongsSpotify);
         } 
          
         if ((prevProps.errorSpotify === "" || prevProps.errorYoutube === "") && (prevProps.errorSpotify !== this.props.errorSpotify || prevProps.errorYoutube !== this.props.errorYoutube)) {    
@@ -44,7 +52,7 @@ class Results extends React.Component {
             this.noPlaylistsToTransfer();
         } else {   
             this.transferPlaylistsToYoutube(); 
-            //this.transferPlaylistsToSpotify();    
+            this.transferPlaylistsToSpotify();    
         }
     }  
      
@@ -62,13 +70,57 @@ class Results extends React.Component {
         return (<div><Error errorYoutube = {this.props.errorYoutube} errorSpotify = {this.props.errorSpotify} beforeRedirect = {this.beforeRedirectOnError} /></div>)
       } 
    
-
-    render() {
+    finishedLoading() {  
+        return ( 
+            <div id = "done_page">   
+                <h1>PlaylistSharerRe</h1>
+                <h3> Songs That Failed To Transfer : </h3> 
+                <h4> To Youtube </h4 >
+                <div class = "service_playlists_result"> 
+                    {this.props.failedSongsYoutube.map( (playlist) =>{  
+                    return (  
+                        <div class = "failed_songs">
+                            <h1>{playlist.name}</h1>   
+                            <ol>
+                            {playlist.failed.map( (failedSong) => { 
+                                return (<li>{failedSong}</li>)
+                            })}  
+                            </ol>
+                        </div> 
+                    ) 
+                    } ) }  
+                </div>  
+                <h4> To Spotify: </h4>
+                <div class = "service_playlists_result"> 
+                    {this.props.failedSongsSpotify.map( (playlist) =>{   
+                    return (  
+                    <div class = "failed_songs">
+                        <h1>{playlist.name}</h1>   
+                        <ol>
+                        {playlist.failedSongs[0].map( (failedSong) => { 
+                            return (<li>{failedSong}</li>)
+                        })}  
+                        </ol>
+                    </div>
+                    ) } ) } 
+                </div> 
+                <Footer socials = "none"/>
+            </div>
+        )
+    } 
+     
+    loading() { 
+        return (   
+          <Loader/>
+        )
+      } 
+      
+      
+    render() { 
         return ( 
             <div>      
-                <div id = "blur">     
-                    <h1>Done</h1>  
-                    {/* {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}    */}
+                <div id = "blur">      
+                    {(this.state.done) ? this.finishedLoading() : this.loading()}   
                 </div>   
                 { (this.state.redirect) ?  this.createPopUpForError() : null}  
             </div>
@@ -86,9 +138,12 @@ const mapStateToProps = (state) => {
         loggedInYoutube : state.youtube_reducer.loggedIn,
         selectedPlaylistsSpotify : state.spotify_reducer.selectedPlaylists || Set(), 
         selectedPlaylistsYoutube : state.youtube_reducer.selectedPlaylists || Set(),   
-        completedTransferYoutube : state.youtube_reducer.completedTransfer, 
         errorSpotify : state.spotify_reducer.error, 
-        errorYoutube : state.youtube_reducer.error,
+        errorYoutube : state.youtube_reducer.error,  
+        failedSongsSpotify : state.spotify_reducer.failedToTransfer || [], 
+        failedSongsYoutube : state.youtube_reducer.failed || [], 
+        completedTransferYoutube : state.youtube_reducer.completedTransferYoutube, 
+        completedTransferSpotify : state.spotify_reducer.completedTransferSpotify,
 
     }
 
