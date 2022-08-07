@@ -30,7 +30,6 @@ export function generateRandomString(length) {
 
 // GET PLAYLISTS
 export function getPlaylistsSpotify(token) {
-    console.log("Getting playlists spotify");
     let url = BASESPOTIFYAPILINK + '/me/playlists?limit=50';
 
     return Promise.all([
@@ -41,7 +40,6 @@ export function getPlaylistsSpotify(token) {
 }
 
 export function getTracksFromPlaylistSpotify(token, playlist) {
-    console.log("Getting playlists from spotify")
     var url = "https://api.spotify.com/v1/playlists/" + playlist + "/tracks?limit=50";
 
     return Promise.all([
@@ -77,7 +75,6 @@ export function getData(url, data, token, resolve, reject) {
 
 
 export function searchForTracksSpotify(token, name, artist) {
-    console.log("Searching for track in spotify");
     let url = (artist === null) ? BASESPOTIFYAPILINK + '/search?q=track:' + name + '&type=track&limit=1' : BASESPOTIFYAPILINK + '/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
 
     return new Promise((resolve, reject) => {
@@ -136,7 +133,6 @@ export function createPlaylistSpotify(playlist, token, url) {
             }).then((responseAsJson) => {
                 resolve(responseAsJson.id);
             }).catch((error) => {
-                console.log(error);
                 reject(error);
             })
         }),
@@ -190,7 +186,6 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
         }).then((data) => {
             getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey);
         }).catch((error) => {
-            console.log(error);
             reject(error)
         })
 
@@ -207,7 +202,6 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, data) {
         let title = currentTrack.snippet.title.replace(/\([^()]*\)/g, '').trim().split("-");
         let artist = null;
         let name = null;
-        console.log(title);
         if (title.length > 1) {
             artist = title[0];
             name = title[1];

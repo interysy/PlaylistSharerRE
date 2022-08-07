@@ -1,9 +1,9 @@
 import React from 'react'; 
 import { connect  } from 'react-redux';   
 import { bindActionCreators } from 'redux';
-import { getPlaylistsSpotifyAction , resetErrors, storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
+import { getPlaylistsSpotifyAction , resetErrorsSpotifyAction, storePlaylistsToTransferSpotifyAction } from '../../redux/actions/spotify_actions'; 
 import { Link } from 'react-router-dom'  
-import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction } from '../../redux/actions/youtube_actions';  
+import { getPlaylistsYoutubeAction , storePlaylistsToTransferYoutubeAction , resetErrorsYoutubeAction } from '../../redux/actions/youtube_actions';  
 import Error from '../../components/error/Error'
  
 import './transfer_playlists.css'  
@@ -68,7 +68,8 @@ class TransferPlaylists extends React.Component {
           })}
       )}  
        
-      if ((prevProps.errorSpotify === "" || prevProps.errorYoutube === "") && (prevProps.errorSpotify !== this.props.errorSpotify || prevProps.errorYoutube !== this.props.errorYoutube)) {    
+      if ((prevProps.errorSpotify === "" || prevProps.errorYoutube === "") && (prevProps.errorSpotify !== this.props.errorSpotify || prevProps.errorYoutube !== this.props.errorYoutube)) {   
+        console.log("Changing error state");  
           this.setState({  
             ...this.state, 
             loading : false,
@@ -106,15 +107,15 @@ class TransferPlaylists extends React.Component {
        
       if (target.checked) {
         if (type == "Spotify") {  
-            this.spotifySelectedPlaylists.add(("3" + "%" + name + "%" + playlistId));
+            this.spotifySelectedPlaylists.add((name + "%" + playlistId));
         } else if (type == "Youtube") {    
-            this.youtubeSelectedPlaylists.add(("3" + "%" + name + "%" + playlistId));
+            this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
         }  
       } else {   
         if (type == "Spotify") { 
-          this.spotifySelectedPlaylists.delete(("3" + "%" + name + "%" + playlistId));
+          this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
         } else if (type == "Youtube") {    
-          this.youtubeSelectedPlaylists.delete(("3" + "%" + name + "%" + playlistId));
+          this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
         } 
      
       } 
@@ -145,7 +146,9 @@ class TransferPlaylists extends React.Component {
       this.props.storePlaylistsToTransferYoutube(this.youtubeSelectedPlaylists);
     } 
      
-    createPopUpForError() { 
+    createPopUpForError() {  
+      console.log(this.props.errorSpotify); 
+      console.log(this.props.errorYoutube);
       let elementToBlur = document.getElementById("blur");
       elementToBlur.style.filter = "blur(2px)";   
       return (<div><Error errorYoutube = {this.props.errorYoutube} errorSpotify = {this.props.errorSpotify} beforeRedirect = {this.beforeRedirectOnError} localRefresh = {this.refreshPlaylists}/></div>)
@@ -237,8 +240,8 @@ const mapDispatchToProps = (dispatch) => {
     getPlaylistsYoutube : bindActionCreators(getPlaylistsYoutubeAction , dispatch), 
     storePlaylistsToTransferSpotify : bindActionCreators( storePlaylistsToTransferSpotifyAction , dispatch), 
     storePlaylistsToTransferYoutube : bindActionCreators( storePlaylistsToTransferYoutubeAction , dispatch),  
-    resetErrorsSpotify : bindActionCreators(resetErrors , dispatch), 
-    resetErrorsYoutube : bindActionCreators(resetErrors , dispatch),
+    resetErrorsSpotify : bindActionCreators(resetErrorsSpotifyAction , dispatch), 
+    resetErrorsYoutube : bindActionCreators(resetErrorsYoutubeAction , dispatch),
 
   } 
 

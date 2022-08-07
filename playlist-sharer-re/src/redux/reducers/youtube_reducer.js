@@ -1,4 +1,4 @@
-import { LOG_IN_YOUTUBE, LOG_OUT_YOUTUBE, GET_PLAYLISTS_YOUTUBE, STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, UPDATE_FAILED_SONGS, SONGS_FAILED_TO_TRANSFER, RAISE_ERROR } from '../actions/youtube_actions'
+import { LOG_IN_YOUTUBE, LOG_OUT_YOUTUBE, GET_PLAYLISTS_YOUTUBE, STORE_PLAYLISTS_TO_TRANSFER_YOUTUBE, UPDATE_FAILED_SONGS, SONGS_FAILED_TO_TRANSFER, RAISE_ERROR_YOUTUBE } from '../actions/youtube_actions'
 
 const default_state = {
     loggedIn: false,
@@ -25,7 +25,8 @@ const youtube_reducer = (state = default_state, action) => {
             return {...state, selectedPlaylists: action.payload.playlists }
         case SONGS_FAILED_TO_TRANSFER:
             return {...state, failedToTransfer: action.payload.failedToTransfer }
-        case RAISE_ERROR:
+        case RAISE_ERROR_YOUTUBE:
+            console.log("i'm here yk");
             return {...state, error: action.payload.error }
         default:
             return state;

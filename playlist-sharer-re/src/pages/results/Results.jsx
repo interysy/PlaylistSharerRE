@@ -3,13 +3,15 @@ import { connect  } from 'react-redux';
 import { bindActionCreators } from 'redux'; 
 import { transferToYoutubeAction } from '../../redux/actions/youtube_actions'   
 import { transferToSpotifyAction } from '../../redux/actions/spotify_actions'
-import Loader from '../../components/loader/Loader'
+import Loader from '../../components/loader/Loader' 
+import Error from '../../components/error/Error'
 
 class Results extends React.Component {
     constructor(props) {
         super(props);   
         this.state = { 
-            done : false,
+            done : false, 
+            redirect : false,
         }  
     }  
      
@@ -24,6 +26,13 @@ class Results extends React.Component {
             this.setState({ 
                 done : true,
             })
+        } 
+         
+        if ((prevProps.errorSpotify === "" || prevProps.errorYoutube === "") && (prevProps.errorSpotify !== this.props.errorSpotify || prevProps.errorYoutube !== this.props.errorYoutube)) {    
+            this.setState({  
+              ...this.state, 
+              redirect : true,
+            });
         }
     } 
 
@@ -46,14 +55,23 @@ class Results extends React.Component {
     transferPlaylistsToSpotify() { 
         this.props.transferToSpotify([...this.props.selectedPlaylistsYoutube] , this.props.accessTokenSpotify ,  this.props.accessTokenYoutube , this.props.apiKeyYoutube);
     }
-    
+     
+    createPopUpForError() { 
+        let elementToBlur = document.getElementById("blur");
+        elementToBlur.style.filter = "blur(2px)";   
+        return (<div><Error errorYoutube = {this.props.errorYoutube} errorSpotify = {this.props.errorSpotify} beforeRedirect = {this.beforeRedirectOnError} /></div>)
+      } 
+   
 
     render() {
         return ( 
             <div>      
-                {(this.state.done === true) ? <h1>Done</h1> : <Loader/>};
-            </div>  
-          
+                <div id = "blur">     
+                    <h1>Done</h1>  
+                    {/* {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}    */}
+                </div>   
+                { (this.state.redirect) ?  this.createPopUpForError() : null}  
+            </div>
         );
     } 
   } 
@@ -68,7 +86,9 @@ const mapStateToProps = (state) => {
         loggedInYoutube : state.youtube_reducer.loggedIn,
         selectedPlaylistsSpotify : state.spotify_reducer.selectedPlaylists || Set(), 
         selectedPlaylistsYoutube : state.youtube_reducer.selectedPlaylists || Set(),   
-        completedTransferYoutube : state.youtube_reducer.completedTransfer,
+        completedTransferYoutube : state.youtube_reducer.completedTransfer, 
+        errorSpotify : state.spotify_reducer.error, 
+        errorYoutube : state.youtube_reducer.error,
 
     }
 
