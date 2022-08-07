@@ -24,7 +24,6 @@ let showYoutubeForm = () => {
   
 const Login = () => {  
   let loggedInSpotify = useSelector((state) => state.spotify_reducer.loggedIn);  
-  let authorisationStateSpotify = useSelector( (state) => state.spotify_reducer.authorisationState);
   let loggedInYoutube = useSelector((state) => state.youtube_reducer.loggedIn);
   const dispatch = useDispatch(); 
 

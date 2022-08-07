@@ -7,8 +7,6 @@ import Loader from '../../components/loader/Loader'
 import Error from '../../components/error/Error'  
 import Footer from '../../components/footer/Footer'
 import './results.css' 
-import YoutubeLogo from '../../assets/logos/yt_logo_rgb_light.png'  
-import SpotifyLogo from '../../assets/logos/Spotify_Logo_CMYK_Green.png' 
 
 class Results extends React.Component {
     constructor(props) {

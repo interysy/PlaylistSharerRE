@@ -1,4 +1,4 @@
-import { getTracksFromPlaylistYoutube, getInformationUsingSelenium } from '../youtube/youtube_funcs'
+import { getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
 
 
 const BASESPOTIFYAPILINK = "https://api.spotify.com/v1";
@@ -130,7 +130,7 @@ export function createPlaylistSpotify(playlist, token, url) {
                 return response.json()
             }).then((responseAsJson) => {
                 if (responseAsJson.error) {
-                    throw "Message : Couldn't create a playlist in spotify" + ' || Status Code : ' + responseAsJson.error.status
+                    throw "Message : Couldn't create a playlist in spotify" + ' || Status Code : ' + responseAsJson.error.status;
                 } else {
                     resolve(responseAsJson.id);
                 }
@@ -183,7 +183,6 @@ export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeA
 export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey) {
     if (playlists[0].length > 0) {
         let currentPlaylist = playlists[0].shift();
-        currentPlaylist = currentPlaylist;
         let currentPlaylistYoutubeId = currentPlaylist.oldId;
         getTracksFromPlaylistYoutube(youtubeToken, youtubeApiKey, currentPlaylistYoutubeId).then((response) => {
             currentPlaylist.tracks = response

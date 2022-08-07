@@ -57,7 +57,7 @@ class TransferPlaylists extends React.Component {
     }
      
     componentDidUpdate(prevProps, prevState) {     
-      if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps != this.props) {  
+      if ((this.props.loadedYoutube !== false || this.props.loadedSpotify !== false) && prevProps !== this.props) {  
         this.setState({  
           spotifyPlaylists : this.props.playlistsSpotify, 
           youtubePlaylists : this.props.playlistsYoutube,
@@ -106,15 +106,15 @@ class TransferPlaylists extends React.Component {
       let playlistId = id[2] 
        
       if (target.checked) {
-        if (type == "Spotify") {  
+        if (type === "Spotify") {  
             this.spotifySelectedPlaylists.add((name + "%" + playlistId));
-        } else if (type == "Youtube") {    
+        } else if (type === "Youtube") {    
             this.youtubeSelectedPlaylists.add((name + "%" + playlistId));
         }  
       } else {   
-        if (type == "Spotify") { 
+        if (type === "Spotify") { 
           this.spotifySelectedPlaylists.delete((name + "%" + playlistId));
-        } else if (type == "Youtube") {    
+        } else if (type === "Youtube") {    
           this.youtubeSelectedPlaylists.delete((name + "%" + playlistId));
         } 
      
@@ -122,10 +122,8 @@ class TransferPlaylists extends React.Component {
     }
       
     searchForPlaylist(event) { 
-      let target = event.target; 
-      let type = target.getAttribute("class");  
+      let target = event.target;  
       let searchingFor = target.value.toLowerCase(); 
-      type = type.split(" ")[1];  
        
       let divOfPlaylists = target.nextSibling; 
       let playlists = divOfPlaylists.getElementsByClassName("playlist_with_check"); 

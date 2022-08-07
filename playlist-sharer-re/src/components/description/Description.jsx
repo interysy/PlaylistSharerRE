@@ -1,6 +1,5 @@
 import React from 'react' 
 import './description.css' 
-import Animation from '../../components/animation/Animation'  
 import CombinedLogos from '../../assets/logos/combined_logos_2.png'
 
 const Description = () => {

@@ -8,7 +8,6 @@ import Description from '../../components/description/Description'
 import ContactMe from '../../components/contactme/ContactMe' 
 import Privacy from '../../components/privacy/Privacy' 
 import Footer from '../../components/footer/Footer' 
-import ToggleSwitch from '../../components/toggle_switch/ToggleSwitch';
  
 import './index.css'
  
