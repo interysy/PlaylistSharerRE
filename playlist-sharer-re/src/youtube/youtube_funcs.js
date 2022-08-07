@@ -129,7 +129,6 @@ export function createPlaylistYoutube(token, apiKey, title) {
     }
 
     return fetch(url, options).then((response) => {
-        console.log(response);
         return response.json()
     }).then((responseAsJson) => {
         return responseAsJson.id;
@@ -241,7 +240,6 @@ export function searchForTrackInner(url, data, resolve, reject, token) {
         data = responseAsJson
         resolve(data)
     }).catch((error) => {
-        console.log(error);
         reject(error);
     });
 }
@@ -263,8 +261,6 @@ export function insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey,
 
         searchForTrack(token, apiKey, artist, name).then((response) => {
             if (response[0].error) {
-                // throw response[0].error.message 
-                console.log(response[0].error);
                 failed.push(artist + " - " + name);
             } else {
                 let videoId = response[0].items[0].id.videoId;
@@ -274,7 +270,6 @@ export function insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey,
             setTimeout(() => {
                 insertIntoPlaylist(token, apiKey, playlistId, videoId).then((response) => {
                     if (response[0].error) {
-                        console.log(response[0].error);
                         failed.push(artist + " - " + name);
                     }
                     insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey, failed, resolve, reject);
@@ -283,7 +278,6 @@ export function insertTracksIntoPlaylistInner(tracks, playlistId, token, apiKey,
         });
 
     } else {
-        console.log(failed);
         resolve(failed);
     }
 }
@@ -322,7 +316,6 @@ export function insertIntoPlaylistInner(url, data, token, playlist, video, resol
     }).then((responseAsJson) => {
         resolve(responseAsJson)
     }).catch((error) => {
-        console.log(error)
         reject(error);
     })
 }
