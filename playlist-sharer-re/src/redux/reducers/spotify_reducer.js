@@ -1,4 +1,4 @@
-import { LOG_IN_SPOTIFY, LOG_OUT_SPOTIFY, GET_PLAYLISTS_SPOTIFY, STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY, UPDATE_AUTHORISATION_STATE, SONGS_FAILED_TO_TRANSFER_SPOTIFY, RAISE_ERROR_SPOTIFY } from '../actions/spotify_actions'
+import { LOG_IN_SPOTIFY, LOG_OUT_SPOTIFY, GET_PLAYLISTS_SPOTIFY, STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY, UPDATE_AUTHORISATION_STATE, SONGS_FAILED_TO_TRANSFER_SPOTIFY, RAISE_ERROR_SPOTIFY, RESET_FOR_NEXT_TRANSFER_SPOTIFY } from '../actions/spotify_actions'
 
 const default_state = {
     authorisationState: 0,
@@ -28,6 +28,9 @@ const spotify_reducer = (state = default_state, action) => {
             return {...state, failedToTransfer: action.payload.failedToTransfer, completedTransferSpotify: true }
         case RAISE_ERROR_SPOTIFY:
             return {...state, error: action.payload.error }
+        case RESET_FOR_NEXT_TRANSFER_SPOTIFY:
+            console.log("HJERE");
+            return {...state, selectedPlaylists: new Set(), failedToTransfer: [], completedTransferSpotify: false, error: "" };
         default:
             return state;
 

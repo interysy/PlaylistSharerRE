@@ -40,8 +40,10 @@ class TransferPlaylists extends React.Component {
         this.beforeRedirectOnError = this.beforeRedirectOnError.bind(this);
     }   
      
-    componentDidMount() {  
-      if (this.props.playlistsSpotify.length !== 0 && this.props.playlistsYoutube.length !== 0) { 
+    componentDidMount() {   
+      if (this.props.loggedInSpotify === false || this.props.loggedInYoutube === false) { 
+        window.location.replace('http://localhost:3000/');  
+      } else if (this.props.playlistsSpotify.length !== 0 && this.props.playlistsYoutube.length !== 0) { 
         this.setState({  
           spotifyPlaylists : this.props.playlistsSpotify, 
           youtubePlaylists : this.props.playlistsYoutube,

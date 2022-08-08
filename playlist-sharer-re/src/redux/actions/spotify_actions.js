@@ -8,6 +8,7 @@ export const STORE_PLAYLISTS_TO_TRANSFER_SPOTIFY = 'STORE_PLAYLISTS_TO_TRANSFER_
 export const UPDATE_AUTHORISATION_STATE = 'UPDATE_AUTHORISATION_STATE';
 export const SONGS_FAILED_TO_TRANSFER_SPOTIFY = 'SONGS_FAILED_TO_TRANSFER_SPOTIFY';
 export const RAISE_ERROR_SPOTIFY = 'RAISE_ERROR_SPOTIFY';
+export const RESET_FOR_NEXT_TRANSFER_SPOTIFY = 'RESET_FOR_NEXT_TRANSFER_SPOTIFY';
 
 export function updateAuthorisationStateAction(state) {
     return { type: UPDATE_AUTHORISATION_STATE, payload: { authorisationState: state } };
@@ -61,24 +62,24 @@ export function resetErrorsSpotifyAction() {
     return (dispatch) => { dispatch({ type: RAISE_ERROR_SPOTIFY, payload: { error: "" } }) }
 }
 
-export function transferToSpotifyAction(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
+export function transferToSpotifyAction(playlists, spotifyToken, youtubeToken) {
     return (dispatch) => {
-        transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey).then((failed) => {
-                console.log(failed);
-                dispatch({
-                    type: SONGS_FAILED_TO_TRANSFER_SPOTIFY,
-                    payload: { failedToTransfer: failed[0] }
-                });
-            }).catch((error) => {
-                console.log(error);
-                dispatch({
-                    type: RAISE_ERROR_SPOTIFY,
-                    payload: { error: error },
-                })
+        transferToSpotify(playlists, spotifyToken, youtubeToken).then((failed) => {
+            console.log(failed);
+            dispatch({
+                type: SONGS_FAILED_TO_TRANSFER_SPOTIFY,
+                payload: { failedToTransfer: failed[0] }
+            });
+        }).catch((error) => {
+            console.log(error);
+            dispatch({
+                type: RAISE_ERROR_SPOTIFY,
+                payload: { error: error },
             })
-            // dispatch({
-            //     type: UPDATE_FAILED_SONGS,
-            //     payload: { failedSongs: failed },
-            // })
+        })
     }
+}
+
+export function resetForAnotherTransferSpotifyAction() {
+    return { type: RESET_FOR_NEXT_TRANSFER_SPOTIFY, payload: {} }
 }

@@ -52,7 +52,7 @@ export function getTracksFromPlaylistSpotify(token, playlist) {
 }
 
 // USED WITH ANY GET REQUEST
-export function getData(url, data, token, resolve, reject) {
+function getData(url, data, token, resolve, reject) {
     fetch(url, {
         headers: {
             'Authorization': 'Bearer ' + token
@@ -79,10 +79,10 @@ export function getData(url, data, token, resolve, reject) {
 
 // TRANSFER TO SPOTIFY MAINLOOP 
 
-export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtubeApiKey) {
+export function transferToSpotify(playlists, spotifyToken, youtubeToken) {
     return new Promise((resolve, reject) => {
         createPlaylistsSpotify(playlists, spotifyToken).then((createdPlaylists) => {
-            getTracksToTransferToPlaylists(createdPlaylists, youtubeToken, youtubeApiKey).then((playlistsWithTracks) => {
+            getTracksToTransferToPlaylists(createdPlaylists, youtubeToken).then((playlistsWithTracks) => {
                 resolve(Promise.all([
                     new Promise((resolve, reject) => {
                         handlePlaylists(playlistsWithTracks[0], spotifyToken, [], resolve, reject);
@@ -99,7 +99,7 @@ export function transferToSpotify(playlists, spotifyToken, youtubeToken, youtube
 
 
 // CREATE PLAYLISTS - STEP 1 OF TRANSFER  
-export function createPlaylistsSpotify(playlists, spotifyToken) {
+function createPlaylistsSpotify(playlists, spotifyToken) {
     let url = BASESPOTIFYAPILINK + '/me/playlists';
     return Promise.all([
         new Promise((resolve, reject) => {
@@ -108,7 +108,7 @@ export function createPlaylistsSpotify(playlists, spotifyToken) {
     ])
 }
 
-export function createPlaylistSpotify(playlist, token, url) {
+function createPlaylistSpotify(playlist, token, url) {
     let description = "Shared from PlaylistSharerRE";
 
     return Promise.all([
@@ -142,7 +142,7 @@ export function createPlaylistSpotify(playlist, token, url) {
 
 }
 
-export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve) {
+function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, reject, resolve) {
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         currentPlaylist = currentPlaylist.split("%");
@@ -170,26 +170,26 @@ export function createPlaylistsSpotifyInner(url, playlists, spotifyToken, data, 
 }
 
 // GETTING TRACKS FROM SPOTIFY - STEP 2 
-export function getTracksToTransferToPlaylists(playlists, youtubeToken, youtubeApiKey) {
+function getTracksToTransferToPlaylists(playlists, youtubeToken) {
     return (Promise.all([
         new Promise((resolve, reject) => {
-            getTracksToTransferToPlaylistsInner(playlists, [], resolve, reject, youtubeToken, youtubeApiKey);
+            getTracksToTransferToPlaylistsInner(playlists, [], resolve, reject, youtubeToken);
         }),
     ]));
 
 }
 
 
-export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey) {
+function getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken) {
     if (playlists[0].length > 0) {
         let currentPlaylist = playlists[0].shift();
         let currentPlaylistYoutubeId = currentPlaylist.oldId;
-        getTracksFromPlaylistYoutube(youtubeToken, youtubeApiKey, currentPlaylistYoutubeId).then((response) => {
+        getTracksFromPlaylistYoutube(youtubeToken, currentPlaylistYoutubeId).then((response) => {
             currentPlaylist.tracks = response
             data.push(currentPlaylist);
             return data
         }).then((data) => {
-            getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken, youtubeApiKey);
+            getTracksToTransferToPlaylistsInner(playlists, data, resolve, reject, youtubeToken);
         }).catch((error) => {
             if (typeof error === typeof {}) {
                 error = error.message;
@@ -203,7 +203,7 @@ export function getTracksToTransferToPlaylistsInner(playlists, data, resolve, re
 }
 
 // PLAYLIST HANDLER - THIRD STEP
-export function handlePlaylists(playlists, spotifyToken, failed, resolve, reject) {
+function handlePlaylists(playlists, spotifyToken, failed, resolve, reject) {
     if (playlists.length > 0) {
         let currentPlaylist = playlists.shift();
         let currentPlaylistSpotifyId = currentPlaylist.newId;
@@ -219,7 +219,7 @@ export function handlePlaylists(playlists, spotifyToken, failed, resolve, reject
 
 // SEARCHING FOR TRACKS - STEP 4
 
-export function searchForTracksSpotify(token, name, artist) {
+function searchForTracksSpotify(token, name, artist) {
     let url = (artist === null) ? BASESPOTIFYAPILINK + '/search?q=track:' + name + '&type=track&limit=1' : BASESPOTIFYAPILINK + '/search?q=track:' + name + '%20artist:' + artist + '&type=track&limit=1';
 
     return new Promise((resolve, reject) => {
@@ -247,7 +247,7 @@ export function searchForTracksSpotify(token, name, artist) {
 
 
 
-export function insertTracksIntoPlaylist(tracks, playlistId, token, data, failed) {
+function insertTracksIntoPlaylist(tracks, playlistId, token, data, failed) {
     return Promise.all([
         new Promise((resolve, reject) => {
             insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject);
@@ -255,10 +255,40 @@ export function insertTracksIntoPlaylist(tracks, playlistId, token, data, failed
     ])
 }
 
-export function insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject) {
+
+function removeBracketsAndFeatures(currentTrackTitle) {
+    let currentTrackNoBrackets = currentTrackTitle.indexOf("[");
+    let currentTrackNoSquareBrackets = currentTrackTitle.indexOf("(");
+    if (currentTrackNoBrackets !== -1 && currentTrackNoSquareBrackets !== -1) {
+        currentTrackTitle = (currentTrackNoBrackets < currentTrackNoSquareBrackets) ? currentTrackTitle.slice(0, currentTrackNoBrackets) : currentTrackTitle.slice(0, currentTrackNoSquareBrackets);
+    } else if (currentTrackNoBrackets !== -1) {
+        currentTrackTitle = currentTrackTitle.slice(0, currentTrackNoBrackets);
+    } else if (currentTrackNoSquareBrackets !== -1) {
+        currentTrackTitle = currentTrackTitle.slice(0, currentTrackNoSquareBrackets);
+    }
+
+    let currentTrackFt = currentTrackTitle.indexOf("ft.");
+    let currentTrackFeat = currentTrackTitle.indexOf("feat.");
+
+    if (currentTrackFt !== -1 && currentTrackFeat !== -1) {
+        currentTrackTitle = (currentTrackFt < currentTrackFeat) ? currentTrackTitle.slice(0, currentTrackFt) : currentTrackTitle.slice(0, currentTrackFeat);
+    } else if (currentTrackFt !== -1) {
+        currentTrackTitle = currentTrackTitle.slice(0, currentTrackFt);
+    } else if (currentTrackFeat !== -1) {
+        currentTrackTitle = currentTrackTitle.slice(0, currentTrackFeat);
+    }
+
+    return currentTrackTitle;
+}
+
+function insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, resolve, reject) {
     if (tracks.length > 0) {
         let currentTrack = tracks.shift();
-        let title = currentTrack.snippet.title.replace(/\([^()]*\)/g, '').trim().split("-");
+        let currentTrackTitle = currentTrack.snippet.title;
+
+        currentTrackTitle = removeBracketsAndFeatures(currentTrackTitle);
+
+        let title = currentTrackTitle.trim().split("-");
         let artist = null;
         let name = null;
         if (title.length > 1) {

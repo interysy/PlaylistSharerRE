@@ -14,7 +14,7 @@ const error = ({errorYoutube , errorSpotify , beforeRedirect , localRefresh}) =>
       </li>  
       <div class = "rectify_btns">
         <Link to = "/"> <Button text = "Return To Home Page and Try Again In A Few Minutes" classes = "btn" onClick = {beforeRedirect}/> </Link>  
-        <Button text = "Try Refreshing?" classes = "btn" onClick = {localRefresh}/> 
+        { (localRefresh) ? <Button text = "Try Refreshing?" classes = "btn" onClick = {localRefresh}/> : null} 
       </div>
     </div>
   )

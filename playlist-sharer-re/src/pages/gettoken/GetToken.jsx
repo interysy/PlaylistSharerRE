@@ -18,27 +18,24 @@ class GetToken extends React.Component {
     } 
 
     componentDidMount() {    
-        let receivedAsParams = new URLSearchParams(window.location.search);     
-        let receivedAsHash = window.location.hash; 
-         
-        if (receivedAsHash.length === 0) { 
-            let success = receivedAsParams.get('success');  
-            if (success) {  
-                let token = receivedAsParams.get('access_token');  
-                let api_key = receivedAsParams.get('api_key'); 
-                this.props.loginYoutube(token, api_key , true);
-            }
-
-        } else {  
-            receivedAsHash = receivedAsHash.replace("#",""); 
-            receivedAsHash = receivedAsHash.split("&");   
+        let receivedAsHash = window.location.hash;  
+        receivedAsHash = receivedAsHash.replace("#" , ""); 
+        receivedAsHash = receivedAsHash.split("&"); 
+        if (receivedAsHash.length === 4) { 
             let token = receivedAsHash[0].split('=')[1];  
             let state = receivedAsHash[3].split('=')[1];
             if (state === this.props.authorisationStateSpotify) { 
                 this.props.loginSpotify(token , true);
             }
-
-        }   
+        } else if (receivedAsHash.length === 5) {  
+            let token = receivedAsHash[1].split('=')[1]
+            let state = receivedAsHash[0].split('=')[1]; 
+            if (state === this.props.authorisationStateYoutube) {  
+                this.props.loginYoutube(token);
+            }
+        } else { 
+            window.location.replace("http://localhost:3000/");
+        }
         let time = 3000; 
         this.timeoutId = setTimeout(() => { 
             window.location.replace("http://localhost:3000/");
@@ -66,7 +63,8 @@ class GetToken extends React.Component {
  
 const mapStateToProps = (state) => {  
     return {  
-        authorisationStateSpotify: state.spotify_reducer.authorisationState,
+        authorisationStateSpotify: state.spotify_reducer.authorisationState, 
+        authorisationStateYoutube : state.youtube_reducer.authorisationStateYoutube,
         tokenSpotify : state.spotify_reducer.token, 
         tokenYoutube : state.youtube_reducer.token,
 

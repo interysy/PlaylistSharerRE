@@ -1,53 +1,121 @@
- #done_page {
-     color: var(--color-primary);
-     display: flex;
-     flex-direction: column;
-     text-align: center;
- }
- 
- #done_page>h1,
- h3 {
-     margin: 2rem 0;
- }
- 
- .service_playlists_result {
-     margin: 2rem;
-     display: grid;
-     grid-template-columns: repeat(3, 1fr);
-     grid-gap: 3.3%;
-     padding: 2rem;
-     background-color: var(--color-bg-variant);
-     border: 2px solid var(--color-white);
-     border-radius: 2rem;
-     height: 35vh;
-     overflow: auto;
- }
- 
- .service_playlists_result>h2 {
-     margin: 2rem;
- }
- 
- .result_image {
-     max-width: min-content;
- }
- 
- .failed_songs {
-     width: 90%;
-     height: 200px;
-     display: flex;
-     flex-direction: column;
-     padding: 2rem;
-     border: 2px solid var(--color-primary);
-     overflow: auto;
-     border-radius: 2rem;
-     margin: 0 1rem;
- }
- 
- .failed_songs>li {
-     margin: 3rem;
- }
- 
- .failed_songs>ol {
-     margin: 1rem;
-     text-align: left;
- }
+#done_page {
+    color: var(--color-primary);
+    background: var(--color-bg);
+    text-align: center;
+}
+
+#done_page>h1,
+h4 {
+    margin: 1rem;
+}
+
+.failed_playlists {
+    height: 65vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 2rem;
+    overflow: auto;
+}
+
+.failed_playlist {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-variant);
+    border-radius: 1rem;
+    border: 2px solid var(--color-white);
+    margin: 2rem;
+    height: 400px;
+    overflow: auto;
+}
+
+.failed_playlist>span {
+    margin: 1rem;
+}
+
+.transfer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: var(--color-primary);
+    border-radius: 1rem;
+    margin: 0.5rem;
+}
+
+.transfer>* {
+    margin: 0.25rem;
+}
+
+.transfer_img {
+    max-width: 100px;
+}
+
+.arrow {
+    color: var(--color-black)
+}
+
+.failed_playlist_inner {
+    margin: 1rem;
+}
+
+.failed_playlist_inner>h4 {
+    margin: 0.5rem;
+}
+
+.failed_playlist_inner>ol {
+    margin: 1rem;
+    text-align: left;
+}
+
+.failed_playlist_inner>ol>li {
+    margin: 1rem;
+}
+
+.stick_to_bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.failed_playlist_img {
+    max-width: 200px;
+    margin: 2rem 0;
+}
+
+.return_btns {
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 1800px) {
+    .failed_playlists {
+        grid-template-columns: repeat(3, 1fr);
+        margin: 1rem;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .failed_playlists {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 1rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .failed_playlists {
+        grid-template-columns: 1fr;
+        margin: 1rem;
+    }
+    .return_btns {
+        margin: 1rem;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .return_btns>* {
+        margin: 1rem;
+    }
+}
