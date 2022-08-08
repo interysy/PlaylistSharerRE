@@ -13,9 +13,8 @@ import './index.css'
  
 
 class Index extends React.Component {
-     
-    
-    render() { 
+    render() {  
+        {console.log(process.env)}
         return ( 
             <div>    
                 <div className = "screen_view">
