@@ -108,13 +108,13 @@ class Results extends React.Component {
                     {this.props.failedSongsYoutube.map( (playlist) => ( 
                         <div className="failed_playlist">   
                             <div className="transfer">   
-                                <img class = "transfer_img" src = {SpotifyLogo} alt = "Spotify Logo" ></img>   
+                                <img class = "transfer_img" src = {SpotifyLogo} ></img>   
                                 <HiArrowSmRight class = "arrow"/>
-                                <img class = "transfer_img" src = {YoutubeLogo} alt = "Youtube Logo"></img>  
+                                <img class = "transfer_img" src = {YoutubeLogo}></img>  
                             </div> 
                             <div className="failed_playlist_inner">
                                 <h4>{playlist.name}</h4>   
-                                <img class = "failed_playlist_img" src = {DefaultPlaylistImageYoutube} alt = "Default Playlist Image Youtube" ></img>  
+                                <img class = "failed_playlist_img" src = {DefaultPlaylistImageYoutube} ></img>  
                                 <h5>Songs That Failed To Transfer: </h5> 
                                 <ol> 
                                 {playlist.failed.map( (failedSong) => { 
