@@ -17,8 +17,7 @@ let showSpotifyForm = (dispatch) => {
     window.location.replace(link);
   } 
   
-let showYoutubeForm = (dispatch) => { 
-  // window.location.replace('http://localhost:3001/logingoogle'); 
+let showYoutubeForm = (dispatch) => {  
   let result = initiateImplicitGrantFlow(); 
   let link = result[0];  
   let state = result[1];  

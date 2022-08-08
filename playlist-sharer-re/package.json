@@ -43,7 +43,6 @@
             "last 1 safari version"
         ]
     },
-    "CI": "true",
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.18.6"
     }

@@ -3,7 +3,7 @@ import { getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
 
 const BASESPOTIFYAPILINK = "https://api.spotify.com/v1";
 const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
-const REDIRECT_URI = `http://localhost:3000/gettoken`;
+const REDIRECT_URI = `https://playlistsharerre.netlify.app/gettoken`;
 const CLIENTID = 'aa7e8d29948e4e2fb53937b11adb69ed'
 
 
