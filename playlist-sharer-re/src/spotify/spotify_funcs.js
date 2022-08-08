@@ -3,7 +3,7 @@ import { getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
 
 const BASESPOTIFYAPILINK = "https://api.spotify.com/v1";
 const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
-const REDIRECT_URI = `https://playlistsharerre.netlify.app/gettoken`;
+const REDIRECT_URI = `http://localhost:3000/gettoken`;
 const CLIENTID = 'aa7e8d29948e4e2fb53937b11adb69ed'
 
 
@@ -314,8 +314,32 @@ function insertTracksIntoPlaylistInner(tracks, playlistId, token, data, failed, 
     }
 }
 
-//INSERT INTO PLAYLIST - LAST STEP
+
 function insertIntoPlaylist(playlistId, token, data) {
+    return Promise.all([
+        new Promise((resolve, reject) => {
+            insertIntoPlaylistInnerMoreThan100(playlistId, token, data, resolve, reject);
+        }),
+    ])
+}
+
+function insertIntoPlaylistInnerMoreThan100(playlistId, token, data, resolve, reject) {
+    let limit = 100;
+    if (data.length > 0) {
+        if (data.length < 100) {
+            limit = data.length;
+        }
+        let tracksToTransferThisIteration = data.slice(0, 0 + limit);
+        insertIntoPlaylistSingle(playlistId, token, tracksToTransferThisIteration).then(() => {
+            insertIntoPlaylistInnerMoreThan100(playlistId, token, data.slice(0 + limit), resolve, reject)
+        });
+    } else {
+        resolve("");
+    }
+}
+//INSERT INTO PLAYLIST - LAST STEP
+function insertIntoPlaylistSingle(playlistId, token, data) {
+    console.log(data);
     let url = BASESPOTIFYAPILINK + "/users/me/playlists/" + playlistId + "/tracks";
 
     for (var i = 0; i < data.length; i++) {
