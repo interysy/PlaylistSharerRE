@@ -1,5 +1,6 @@
 #header {
     height: 50vh;
+    color: var(--color-primary);
 }
 
 #title_section_of_page {
@@ -12,7 +13,6 @@
 #header h1 {
     font-size: 6rem;
     font-weight: 300;
-    color: var(--color-primary);
     letter-spacing: 0.5rem;
 }
 
@@ -20,6 +20,7 @@
     font-size: 2rem;
     font-weight: 700;
     padding: 0.2rem;
+    color: var(--color-black);
     background-color: var(--color-primary);
     max-width: fit-content;
     position: relative;
