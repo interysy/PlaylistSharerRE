@@ -54,6 +54,7 @@ function getData(url, data, resolve, reject, token) {
         }
     }).then((response) => response.json()).then((response) => {
         let retrievedData = data.concat(response.items);
+        console.log(response);
         if (response.nextPageToken) {
             getData(url + "&pageToken=" + response.nextPageToken, retrievedData, resolve, reject, token)
         } else if (response.error) {

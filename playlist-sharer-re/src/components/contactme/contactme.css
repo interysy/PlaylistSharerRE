@@ -70,6 +70,10 @@ textarea {
     }
 }
 
+.contactme_form>form>button {
+    background-color: var(--color-btns);
+}
+
 @media screen and (max-width: 600px) {
     .contactme_heading {
         font-size: 0.7rem;

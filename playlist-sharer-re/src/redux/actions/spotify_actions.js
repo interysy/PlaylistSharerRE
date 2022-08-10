@@ -39,7 +39,7 @@ export function getPlaylistsSpotifyAction(token) {
                 }
                 result.push(playlist_element_obj);
             })
-
+            console.log("HERE I AM");
             dispatch({
                 type: GET_PLAYLISTS_SPOTIFY,
                 payload: { playlists: result }

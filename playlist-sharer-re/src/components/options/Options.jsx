@@ -10,8 +10,6 @@ const Options = () => {
     <section id="options">   
         <div className="btns">
         <Link to = "/transferplaylists"> <Button text = "Start Sharing !" classes = "btn" active = {null} /> </Link> 
-          {/* <Button  text = "Combine" onClick = {test} className = "btn"/> 
-          <Button text = "Synchronise" onClick = {test} className = "btn"/>  */}
         </div>
     </section>
   )

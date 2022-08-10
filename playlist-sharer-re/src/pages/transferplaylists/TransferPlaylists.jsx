@@ -43,7 +43,7 @@ class TransferPlaylists extends React.Component {
     componentDidMount() {   
       if (this.props.loggedInSpotify === false || this.props.loggedInYoutube === false) { 
         window.location.replace('http://localhost:3000/');  
-      } else if (this.props.playlistsSpotify.length !== 0 && this.props.playlistsYoutube.length !== 0) { 
+      } else if (this.loadedSpotify && this.props.loadedYoutube ) { 
         this.setState({  
           spotifyPlaylists : this.props.playlistsSpotify, 
           youtubePlaylists : this.props.playlistsYoutube,
@@ -184,16 +184,16 @@ class TransferPlaylists extends React.Component {
             <div className="service"> 
               <img class = "header_img" src = {SpotifyLogo} alt = "Spotify Logo" ></img> 
               <input type="text" className = "search_bar spotify_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
-              <div className="service_playlists">
-                {this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify"/>))}  
+              <div className="service_playlists"> 
+                {(this.state.spotifyPlaylists.length > 0) ? this.state.spotifyPlaylists.map( (element,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Spotify"/>)) : <p>No playlists exist on your account yet!</p>}
               </div>
             </div>  
             <Button text = "Refresh Playlists" onClick = {this.refreshPlaylists} classes = "btn refresh_btn" ></Button> 
             <div className="service"> 
             <img class = "header_img" src = {YoutubeLogo} alt = "Youtube Logo"></img>  
               <input type="text" className = "search_bar youtube_search_bar" placeholder="Search.." onChange={this.searchForPlaylist}></input> 
-              <div className="service_playlists">
-                {this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube"/>))}  
+              <div className="service_playlists"> 
+                {(this.state.youtubePlaylists.length > 0) ? this.state.youtubePlaylists.map( (element ,idx) => (<Playlist name = {element.name} id = {element.id} owner = {element.owner} image = {element.image} description = {element.description} onChange = {this.handleCheckbox} type = "Youtube"/>)) : <p>No playlists exist on your account!</p>}  
               </div>
             </div>            
            </div>   
@@ -207,7 +207,7 @@ class TransferPlaylists extends React.Component {
         return (   
           <div>
             <div id = "blur">      
-                {( !this.state.loading && this.state.spotifyPlaylists.length > 0) ? this.finishedLoading() : this.loading()}   
+                {( !this.state.loading) ? this.finishedLoading() : this.loading()}   
             </div>   
              { (this.state.redirect) ?  this.createPopUpForError() : null}  
           </div>

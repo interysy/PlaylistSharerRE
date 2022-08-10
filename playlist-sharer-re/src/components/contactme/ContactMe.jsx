@@ -2,41 +2,32 @@ import React from 'react'
 import './contactme.css' 
 import {MdOutlineEmail} from 'react-icons/md'  
 import {TbBrandDiscord} from 'react-icons/tb' 
- 
-let messageMe = function(event) {  
-  event.preventDefault(); 
-  let name = event.target[0].value; 
-  let email = event.target[1].value; 
-  let message = event.target[2].value;  
+import { useRef } from 'react'; 
+import emailjs from '@emailjs/browser'; 
 
+const ContactMe = () => { 
+  const contactme_form = useRef();  
 
-  let webhookOptions = {
-    embeds: [{
-      title: 'A New Message In PlaylistSharerRE',
-      fields: [ 
-        { name : 'Name' , value : name },
-        { name: "Sender's Email", value: email },
-        { name: 'Message', value: message }, 
-      ]
-    }],
-  };  
+  const sendMessage = (event) => { 
+    event.preventDefault();   
+    emailjs.sendForm('playlistsharerre', 'template_hc2t88i', contactme_form.current, 'KpeZg8umVr-nfJmXm')
+      .then((result) => {  
+          addMessage("Sent Successfully , await my reply !");  
+      }, (error) => {
+          addMessage("Error with message of : " + error);  
+          
+      });
+  }  
    
-  const webhookUrl = ""
-   
-  let response = fetch(webhookUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(webhookOptions),
-  }).then( (response) => { 
-    if (response.ok) { 
-      document.getElementsByClassName("contactme_form").append("<p> Successfully Sent! Await my response..</p>")
-    }
-  }).catch((error) => console.log(error));
-  
-}
-const ContactMe = () => {
+  function addMessage(msg) {    
+    let elementToAddMessageTo = document.getElementsByClassName("contactme_form")[0];  
+    let successMessageP = document.createElement("p");  
+    let successMessageText = document.createTextNode(msg);
+    successMessageP.appendChild(successMessageText);
+    elementToAddMessageTo.appendChild(successMessageP); 
+
+  }
+
   return (
     <section id="contactme" className = "section"> 
       <div className="contactme_heading"> 
@@ -60,10 +51,10 @@ const ContactMe = () => {
             </article>  
       </div>  
       <div className = "contactme_form">  
-        <form onSubmit = {messageMe}> 
+        <form onSubmit = {sendMessage} ref = {contactme_form}> 
             <input id = 'name' type="text" name = "name" placeholder='Your Full Name' required /> 
             <input id = 'email' type="email" name = "email" placeholder = "Your Email" required /> 
-            <textarea id = 'message' type= 'message' rows = "7" placeholder = "Your Message" required></textarea> 
+            <textarea id = 'message' name  =  "message" type= 'message' rows = "7" placeholder = "Your Message" required></textarea> 
             <button type = "submit" className = "btn btn-primary">Send Message</button>  
           </form>
       </div> 

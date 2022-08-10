@@ -20,7 +20,8 @@ class Results extends React.Component {
         super(props);   
         this.state = { 
             done : false, 
-            redirect : false,
+            redirect : false, 
+            noPlaylistsToTransfer : false,
         }  
          
         this.finishedLoading = this.finishedLoading.bind(this);  
@@ -53,7 +54,10 @@ class Results extends React.Component {
                 done : true,
             });
         } else if ( this.props.selectedPlaylistsSpotify.length === 0 && this.props.selectedPlaylistsYoutube.length === 0){ 
-            this.noPlaylistsToTransfer();
+            this.setState({ 
+                ...this.state, 
+                noPlaylistsToTransfer : true, 
+            })
         } else {   
             this.transferPlaylistsToYoutube(); 
             this.transferPlaylistsToSpotify();    
@@ -166,7 +170,8 @@ class Results extends React.Component {
         return ( 
             <div>      
                 <div id = "blur">      
-                    {(this.state.done) ? this.finishedLoading() : this.loading()}   
+                    {(this.state.done) ? this.finishedLoading() : this.loading()}  
+                    {(this.state.noPlaylistsToTransfer) ?  <p> No playlists were chosen, try again!</p> : null}
                 </div>   
                 { (this.state.redirect) ?  this.createPopUpForError() : null}  
             </div>
