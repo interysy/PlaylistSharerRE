@@ -3,8 +3,8 @@ import { getTracksFromPlaylistYoutube } from '../youtube/youtube_funcs'
 
 const BASESPOTIFYAPILINK = "https://api.spotify.com/v1";
 const AUTHORIZELINK = 'https://accounts.spotify.com/authorize?';
-const REDIRECT_URI = `http://localhost:3000/gettoken`;
-const CLIENTID = 'aa7e8d29948e4e2fb53937b11adb69ed'
+const REDIRECT_URI = `${process.env.REACT_APP_SITE_LINK}/gettoken`;
+const CLIENTID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 
 
 export function getAuthorisationPageLinkImplicitGrant() {

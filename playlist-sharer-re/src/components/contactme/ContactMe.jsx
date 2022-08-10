@@ -10,7 +10,7 @@ const ContactMe = () => {
 
   const sendMessage = (event) => { 
     event.preventDefault();   
-    emailjs.sendForm('playlistsharerre', 'template_hc2t88i', contactme_form.current, process.env.EMAILJSKEY)
+    emailjs.sendForm('playlistsharerre', 'template_hc2t88i', contactme_form.current, process.env.REACT_APP_EMAILJS_KEY)
       .then( () => {  
           addMessage("Sent Successfully , await my reply !");  
       }, (error) => {
