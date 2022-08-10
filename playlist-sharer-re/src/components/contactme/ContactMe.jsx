@@ -10,8 +10,8 @@ const ContactMe = () => {
 
   const sendMessage = (event) => { 
     event.preventDefault();   
-    emailjs.sendForm('playlistsharerre', 'template_hc2t88i', contactme_form.current, 'KpeZg8umVr-nfJmXm')
-      .then((result) => {  
+    emailjs.sendForm('playlistsharerre', 'template_hc2t88i', contactme_form.current, process.env.EMAILJSKEY)
+      .then( () => {  
           addMessage("Sent Successfully , await my reply !");  
       }, (error) => {
           addMessage("Error with message of : " + error);  

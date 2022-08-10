@@ -2,8 +2,8 @@ import { getTracksFromPlaylistSpotify, generateRandomString } from '../spotify/s
 
 
 const BASEYOUTUBEAPILINK = "https://youtube.googleapis.com/youtube/v3";
-const YOUTUBECLIENTID = "356392921757-81sc3smjl4b95069s4qhvptuft96v7g9.apps.googleusercontent.com";
-const REDIRECT_URI = `http://localhost:3000/gettoken`;
+const YOUTUBECLIENTID = process.env.YOUTUBECLIENTID;
+const REDIRECT_URI = `${process.env.SITELINK}/gettoken`;
 const scopes = [
     "https://www.googleapis.com/auth/youtube.force-ssl",
 ]
