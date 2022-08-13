@@ -121,7 +121,7 @@ class Results extends React.Component {
                                 <img class = "failed_playlist_img" src = {DefaultPlaylistImageYoutube} ></img>  
                                 <h5>Songs That Failed To Transfer: </h5> 
                                 <ol> 
-                                {playlist.failed.map( (failedSong) => { 
+                                {playlist.failed[0].map( (failedSong) => { 
                                     return (<li>{failedSong}</li>)
                                 })}  
                                 </ol> 
