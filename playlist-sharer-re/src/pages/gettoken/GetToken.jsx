@@ -34,11 +34,12 @@ class GetToken extends React.Component {
                 this.props.loginYoutube(token);
             }
         } else { 
-            window.location.replace("http://localhost:3000/");
-        }
+            window.location.replace(process.env.REACT_APP_SITE_LINK + "/");
+        } 
+
         let time = 3000; 
         this.timeoutId = setTimeout(() => { 
-            window.location.replace("http://localhost:3000/");
+            window.location.replace(process.env.REACT_APP_SITE_LINK + "/");
         },time)
           
 
